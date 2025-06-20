@@ -14,7 +14,6 @@ export default function FoodItem3D({ modelUrl, itemId }: FoodItem3DProps) {
   const [shouldLoad, setShouldLoad] = useState(false)
 
   useEffect(() => {
-    // Load model-viewer script if not already loaded
     if (!document.querySelector('script[src*="model-viewer"]')) {
       const script = document.createElement("script")
       script.type = "module"
@@ -24,7 +23,6 @@ export default function FoodItem3D({ modelUrl, itemId }: FoodItem3DProps) {
   }, [])
 
   useEffect(() => {
-    // Intersection Observer for lazy loading
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -44,11 +42,18 @@ export default function FoodItem3D({ modelUrl, itemId }: FoodItem3DProps) {
   }, [shouldLoad])
 
   const handleViewInAR = () => {
-    const modelViewer = document.getElementById(`model-${itemId}`)
-    if (modelViewer && (modelViewer as any).activateAR) {
-      ;(modelViewer as any).activateAR()
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+      navigator.userAgent
+    );
+    if (!isMobile) {
+      alert('3D view is only supported on mobile devices.');
+      return;
     }
-  }
+    const modelViewer = document.getElementById(`model-${itemId}`);
+    if (modelViewer && (modelViewer as any).activateAR) {
+      (modelViewer as any).activateAR();
+    }
+  };
 
   return (
     <div ref={modelViewerRef} className="w-full h-full relative">
@@ -70,16 +75,16 @@ export default function FoodItem3D({ modelUrl, itemId }: FoodItem3DProps) {
           <Button
             onClick={handleViewInAR}
             size="sm"
-            className="absolute bottom-2 right-2 bg-blue-500 hover:bg-blue-600 text-white text-xs px-3 py-1 rounded-lg shadow-lg"
+            className="absolute bottom-2 left-2 bg-[#fbb63d] text-black hover:bg-[#fef4ea] text-xs px-3 py-1 rounded-lg shadow-lg"
           >
-            View in AR
+            View In 3D
           </Button>
         </>
       ) : (
-        <div className="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center rounded-t-2xl">
+        <div className="w-full h-full bg-gradient-to-br from-[#fef4ea] to-[#fccd3f] flex items-center justify-center rounded-t-2xl">
           <div className="text-center">
-            <div className="w-12 h-12 bg-gray-300 rounded-full animate-pulse mx-auto mb-2"></div>
-            <p className="text-gray-500 text-sm">Loading 3D Model...</p>
+            <div className="w-12 h-12 bg-[#fccd3f] rounded-full animate-pulse mx-auto mb-2"></div>
+            <p className="text-[#fccd3f] text-sm">Loading 3D Model...</p>
           </div>
         </div>
       )}

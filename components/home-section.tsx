@@ -56,8 +56,8 @@ export default function HomeSection() {
               <div className="space-y-4">
                 <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold leading-tight">
                   <span className="bg-gradient-to-r from-orange-600 to-amber-600 bg-clip-text text-transparent">
-                    etaverse
                   </span>
+                    <img src="/logo.png" alt="Logo" className="inline-block" />
                   <br />
                   <span className="text-gray-800 text-3xl sm:text-4xl lg:text-5xl">Restaurant</span>
                 </h1>

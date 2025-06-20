@@ -18,7 +18,6 @@ export default function RestaurantMenu({ onAddToCart }: RestaurantMenuProps) {
   const [menuItems, setMenuItems] = useState<any[]>([])
 
   useEffect(() => {
-    
     setMenuItems(getMenuItems().slice(1))
   }, [])
 
@@ -57,7 +56,6 @@ export default function RestaurantMenu({ onAddToCart }: RestaurantMenuProps) {
   const getTypeColor = (type: string) => {
     switch (type) {
       case "veg":
-        return "bg-green-100 text-green-800 border-green-200"
       case "vegan":
         return "bg-green-100 text-green-800 border-green-200"
       case "non-veg":
@@ -68,20 +66,28 @@ export default function RestaurantMenu({ onAddToCart }: RestaurantMenuProps) {
   }
 
   return (
-    <section id="menu-section" className="py-2 sm:py-4 lg:py-4 bg-gradient-to-br bg-transparent">
-      <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 space-y-6 sm:space-y-8 lg:space-y-2">
-        
+    <section id="menu-section" className="relative py-2 sm:py-4 lg:py-4 bg-transparent">
+      {/* Animated BG */}
+      <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-[#f1da93] to-[#fef4ea] rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-br from-[#fef4ea] to-[#f8e29e] rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
+        <div className="absolute top-40 left-1/2 w-80 h-80 bg-gradient-to-br from-[#f3d886] to-[#fef4ea] rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000"></div>
+      </div>
+      {/* End Animated BG */}
 
+      <div className="relative z-10 max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 space-y-6 sm:space-y-8 lg:space-y-2">
         {/* Search and Filters */}
-        <div className="bg-transparent rounded-xl sm:rounded-2xl shadow-lg p-3 sm:p-4 lg:p-6 border border-orange-100 mx-2 sm:mx-0">
+        <h1 className="text-center text-4xl mb-10">Our 3d Menu </h1>
+        <div className="bg-transparent rounded-xl sm:rounded-2xl shadow-lg p-3 sm:p-4 lg:p-6 border border-black mx-2 sm:mx-0">
           <div className="flex flex-col gap-3 sm:gap-4">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 outeline-none" />
               <Input
                 placeholder="Search menu items..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 border-orange-200 focus:border-orange-400 text-sm sm:text-base"
+                className="pl-10 border-gray-300  text-sm sm:text-base focus:outline-none" 
+                
               />
             </div>
 
@@ -92,8 +98,8 @@ export default function RestaurantMenu({ onAddToCart }: RestaurantMenuProps) {
                 size="sm"
                 className={
                   selectedType === "all"
-                    ? "bg-gradient-to-r from-orange-500 to-amber-500 text-xs sm:text-sm"
-                    : "border-orange-200 hover:bg-orange-50 text-xs sm:text-sm"
+                    ? " bg-[#fbb63d] text-xs sm:text-sm"
+                    : " text-xs sm:text-sm"
                 }
               >
                 <Filter className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
@@ -155,10 +161,10 @@ export default function RestaurantMenu({ onAddToCart }: RestaurantMenuProps) {
                   {categoryItems.map((item) => (
                     <div
                       key={item.id}
-                      className="bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 border border-orange-100 hover:border-orange-200 flex-shrink-0 w-64 sm:w-72 lg:w-80"
+                      className="glare-card border-2 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300  border-transparent hover:border-[#fccd3f] flex-shrink-0 w-64 sm:w-72 lg:w-80"
                     >
                       {/* 3D Model Display */}
-                      <div className="h-40 sm:h-48 lg:h-56 bg-gradient-to-br from-orange-50 to-amber-50 relative">
+                      <div className="h-40 sm:h-48 lg:h-56 bg-transparent relative">
                         <FoodItem3D modelUrl={item.modelUrl} itemId={item.id} />
                         <div className="absolute top-2 sm:top-3 right-2 sm:right-3">
                           <Badge className={getTypeColor(item.type)} >
@@ -186,12 +192,12 @@ export default function RestaurantMenu({ onAddToCart }: RestaurantMenuProps) {
                         </div>
 
                         <div className="flex items-center justify-between">
-                          <span className="text-xl sm:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-orange-600 to-amber-600 bg-clip-text text-transparent">
+                          <span className="text-xl sm:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-[#fccd3f] to-[#fbb63d] bg-clip-text text-transparent">
                             ₹{item.price}
                           </span>
                           <Button
                             onClick={() => onAddToCart(item)}
-                            className="bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white px-3 sm:px-4 lg:px-6 py-1.5 sm:py-2 rounded-lg sm:rounded-xl text-xs sm:text-sm lg:text-base"
+                            className="bg-[#fbb63d] text-white px-3 sm:px-4 lg:px-6 py-1.5 sm:py-2 rounded-lg sm:rounded-xl text-xs sm:text-sm lg:text-base"
                           >
                             Add to Cart
                           </Button>
@@ -206,7 +212,7 @@ export default function RestaurantMenu({ onAddToCart }: RestaurantMenuProps) {
         })}
 
         {/* Why Choose Our 3D Menu Section */}
-        <section className="py-8 sm:py-12 lg:py-20 bg-white/80 backdrop-blur-sm rounded-2xl sm:rounded-3xl border border-orange-100 mx-2 sm:mx-0">
+        <section className="py-8 sm:py-12 lg:py-20 bg-white/10 backdrop-blur-sm rounded-2xl sm:rounded-3xl border border-[#fccd3f] mx-2 sm:mx-0">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-8 sm:mb-12 lg:mb-16">
               <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-800 mb-3 sm:mb-4">
@@ -218,9 +224,9 @@ export default function RestaurantMenu({ onAddToCart }: RestaurantMenuProps) {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
-              <div className="text-center p-4 sm:p-6 lg:p-8 rounded-xl sm:rounded-2xl bg-gradient-to-br from-orange-50 to-orange-100 hover:shadow-lg transition-shadow">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 lg:w-16 lg:h-16 bg-orange-500 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 lg:mb-6">
-                  <Star className="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 text-white" />
+              <div className="text-center p-4 sm:p-6 lg:p-8 rounded-xl sm:rounded-2xl bg-gradient-to-br from-[#fef4ea] to-[#fccd3f] hover:shadow-lg transition-shadow glare-card">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 lg:w-16 lg:h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 lg:mb-6">
+                  <Star className="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 text-black" />
                 </div>
                 <h3 className="text-base sm:text-lg lg:text-xl font-bold text-gray-800 mb-2 sm:mb-3 lg:mb-4">
                   Interactive 3D Models
@@ -230,9 +236,9 @@ export default function RestaurantMenu({ onAddToCart }: RestaurantMenuProps) {
                 </p>
               </div>
 
-              <div className="text-center p-4 sm:p-6 lg:p-8 rounded-xl sm:rounded-2xl bg-gradient-to-br from-amber-50 to-amber-100 hover:shadow-lg transition-shadow">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 lg:w-16 lg:h-16 bg-amber-500 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 lg:mb-6">
-                  <Users className="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 text-white" />
+              <div className="text-center p-4 sm:p-6 lg:p-8 rounded-xl sm:rounded-2xl bg-gradient-to-br from-[#fef4ea] to-[#fccd3f] hover:shadow-lg transition-shadow glare-card">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 lg:w-16 lg:h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 lg:mb-6">
+                  <Users className="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 text-black" />
                 </div>
                 <h3 className="text-base sm:text-lg lg:text-xl font-bold text-gray-800 mb-2 sm:mb-3 lg:mb-4">
                   AR Experience
@@ -242,8 +248,8 @@ export default function RestaurantMenu({ onAddToCart }: RestaurantMenuProps) {
                 </p>
               </div>
 
-              <div className="text-center p-4 sm:p-6 lg:p-8 rounded-xl sm:rounded-2xl bg-gradient-to-br from-yellow-50 to-yellow-100 hover:shadow-lg transition-shadow sm:col-span-2 lg:col-span-1">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 lg:w-16 lg:h-16 bg-yellow-500 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 lg:mb-6">
+              <div className="text-center p-4 sm:p-6 lg:p-8 rounded-xl sm:rounded-2xl bg-gradient-to-br from-[#fef4ea] to-[#fccd3f] hover:shadow-lg transition-shadow glare-card sm:col-span-2 lg:col-span-1">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 lg:w-16 lg:h-16 bg-[#fccd3f] rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 lg:mb-6">
                   <Clock className="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 text-white" />
                 </div>
                 <h3 className="text-base sm:text-lg lg:text-xl font-bold text-gray-800 mb-2 sm:mb-3 lg:mb-4">
@@ -267,6 +273,29 @@ export default function RestaurantMenu({ onAddToCart }: RestaurantMenuProps) {
           </div>
         )}
       </div>
+      <style jsx global>{`
+        .glare-card {
+          position: relative;
+          overflow: hidden;
+        }
+        .glare-card::before {
+          content: "";
+          position: absolute;
+          top: -60%;
+          left: -60%;
+          width: 200%;
+          height: 200%;
+          background: linear-gradient(120deg, rgba(255,255,255,0.15) 0%, rgba(252,205,63,0.25) 100%);
+          transform: rotate(8deg);
+          pointer-events: none;
+          z-index: 1;
+          mix-blend-mode: lighten;
+        }
+        .glare-card > * {
+          position: relative;
+          z-index: 2;
+        }
+      `}</style>
     </section>
   )
 }

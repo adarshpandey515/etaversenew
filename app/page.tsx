@@ -58,25 +58,22 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-amber-50">
-      {/* Animated Background */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-orange-200 to-amber-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-br from-amber-200 to-orange-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
-        <div className="absolute top-40 left-1/2 w-80 h-80 bg-gradient-to-br from-orange-300 to-amber-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000"></div>
+    <div className="min-h-screen bg-gradient-to-br from-[#fef4ea] via-white to-[#fccd3f]">
+      {/* Animated Fixed Background */}
+      <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-[#fccd3f] to-[#fef4ea] rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-br from-[#fef4ea] to-[#fccd3f] rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
+        <div className="absolute top-40 left-1/2 w-80 h-80 bg-gradient-to-br from-[#fccd3f] to-[#fef4ea] rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000"></div>
       </div>
 
       {/* Header */}
-      <header className="bg-white/60 backdrop-blur-md shadow-lg border-b border-orange-100 sticky top-0 z-50">
+      <header className="backdrop-blur-md shadow-lg border-b sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-r from-orange-500 to-amber-500 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-lg">E</span>
+              <div className="w-[200px] h-[50px] rounded-lg flex items-center justify-center">
+                <img src="/logo.png" alt="Logo" className="" />
               </div>
-              <h1 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-orange-600 to-amber-600 bg-clip-text text-transparent">
-                etaverse
-              </h1>
             </div>
 
             {/* Desktop Navigation */}
@@ -84,17 +81,20 @@ export default function HomePage() {
               <Button
                 variant="outline"
                 onClick={() => setShowUpload(true)}
-                className="flex items-center space-x-2 border-orange-200 hover:bg-orange-50"
+                className="flex items-center space-x-2 border-[#fccd3f] hover:bg-[#fef4ea]"
               >
                 <Upload className="w-4 h-4" />
-                <span>Upload Models</span>
               </Button>
 
-              <Button variant="outline" className="relative" onClick={() => setShowCart(true)}>
+              <Button
+                variant="outline"
+                className="relative border-[#fccd3f] hover:bg-[#fef4ea]"
+                onClick={() => setShowCart(true)}
+              >
                 <ShoppingCart className="w-4 h-4 mr-2" />
                 <span className="hidden sm:inline">Cart</span>
                 {getTotalItems() > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-orange-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center animate-pulse">
+                  <span className="absolute -top-2 -right-2 bg-[#fccd3f] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center animate-pulse">
                     {getTotalItems()}
                   </span>
                 )}
@@ -103,10 +103,15 @@ export default function HomePage() {
 
             {/* Mobile Menu Button */}
             <div className="md:hidden flex items-center space-x-2">
-              <Button variant="outline" size="sm" onClick={() => setShowCart(true)} className="relative">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowCart(true)}
+                className="relative border-[#fccd3f] hover:bg-[#fef4ea]"
+              >
                 <ShoppingCart className="w-4 h-4" />
                 {getTotalItems() > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-orange-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center text-[10px]">
+                  <span className="absolute -top-1 -right-1 bg-[#fccd3f] text-white text-xs rounded-full w-4 h-4 flex items-center justify-center text-[10px]">
                     {getTotalItems()}
                   </span>
                 )}
@@ -119,17 +124,16 @@ export default function HomePage() {
 
           {/* Mobile Menu */}
           {mobileMenuOpen && (
-            <div className="md:hidden pb-4 border-t border-orange-100 mt-2 pt-4">
+            <div className="md:hidden pb-4 mt-2 pt-4">
               <Button
                 variant="outline"
                 onClick={() => {
                   setShowUpload(true)
                   setMobileMenuOpen(false)
                 }}
-                className="w-full flex items-center justify-center space-x-2 border-orange-200 hover:bg-orange-50"
+                className="w-full flex items-center justify-center space-x-2 border-[#fccd3f] hover:bg-[#fef4ea]"
               >
                 <Upload className="w-4 h-4" />
-                <span>Upload Models</span>
               </Button>
             </div>
           )}
@@ -153,7 +157,7 @@ export default function HomePage() {
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-2 sm:p-4">
           <div className="bg-white rounded-2xl max-w-6xl w-full max-h-[95vh] overflow-y-auto">
             <div className="p-4 sm:p-6 border-b border-gray-200 flex justify-between items-center">
-              <h2 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-orange-600 to-amber-600 bg-clip-text text-transparent">
+              <h2 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-[#fccd3f] to-[#fef4ea] bg-clip-text text-transparent">
                 Upload 3D Models
               </h2>
               <Button variant="ghost" onClick={() => setShowUpload(false)} className="p-2">
