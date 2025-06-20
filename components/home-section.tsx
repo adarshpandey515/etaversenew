@@ -1,41 +1,31 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef } from "react"
 import { Button } from "@/components/ui/button"
 import { ArrowRight, Star } from "lucide-react"
 
 export default function HomeSection() {
   const modelViewerRef = useRef<any>(null)
-  const [modelLoaded, setModelLoaded] = useState(false)
-  const [modelError, setModelError] = useState(false)
-  const [isScriptLoaded, setIsScriptLoaded] = useState(false)
+
 
   useEffect(() => {
     // Check if model-viewer is already loaded
-    if (window.customElements && window.customElements.get("model-viewer")) {
-      setIsScriptLoaded(true)
-      return
-    }
+  
 
     // Load model-viewer script
     const script = document.createElement("script")
     script.type = "module"
-    script.src = "https://unpkg.com/@google/model-viewer@3.4.0/dist/model-viewer.min.js"
+    script.src = "https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"
 
-    script.onload = () => {
-      console.log("Model viewer script loaded for hero section")
-      setIsScriptLoaded(true)
-    }
 
-    script.onerror = () => {
-      console.error("Failed to load model viewer script for hero section")
-      setModelError(true)
-    }
 
     document.head.appendChild(script)
 
     return () => {
       // Don't remove script as it might be used by other components
+           if (document.head.contains(script)) {
+        document.head.removeChild(script)
+      }
     }
   }, [])
 
@@ -58,17 +48,7 @@ export default function HomeSection() {
     }
   }
 
-  const handleModelLoad = () => {
-    console.log("Hero model loaded successfully")
-    setModelLoaded(true)
-    setModelError(false)
-  }
 
-  const handleModelError = (event: any) => {
-    console.error("Hero model loading error:", event)
-    setModelError(true)
-    setModelLoaded(false)
-  }
 
   return (
     <div className="relative">
@@ -106,7 +86,7 @@ export default function HomeSection() {
                   size="lg"
                   onClick={handleViewInAR}
                   className="border-orange-300 text-orange-600 hover:bg-orange-50 px-6 sm:px-8 py-3 text-base sm:text-lg"
-                  disabled={!modelLoaded}
+                
                 >
                   View in AR
                 </Button>
@@ -132,57 +112,26 @@ export default function HomeSection() {
             {/* Right Content - 3D Model */}
             <div className="relative order-1 lg:order-2">
               <div className="relative w-full h-64 sm:h-80 lg:h-[500px] bg-white/80 rounded-3xl shadow-2xl overflow-hidden backdrop-blur-sm">
-                {!modelLoaded && !modelError && !isScriptLoaded && (
-                  <div className="absolute inset-0 bg-gradient-to-br from-orange-50 to-amber-50 flex items-center justify-center z-10">
-                    <div className="text-center">
-                      <div className="w-16 h-16 bg-orange-200 rounded-full animate-pulse mx-auto mb-4"></div>
-                      <p className="text-gray-500 text-lg">Loading 3D Viewer...</p>
-                    </div>
-                  </div>
-                )}
+       
 
-                {!modelLoaded && !modelError && isScriptLoaded && (
-                  <div className="absolute inset-0 bg-gradient-to-br from-orange-50 to-amber-50 flex items-center justify-center z-10">
-                    <div className="text-center">
-                      <div className="w-16 h-16 bg-orange-200 rounded-full animate-pulse mx-auto mb-4"></div>
-                      <p className="text-gray-500 text-lg">Loading 3D Model...</p>
-                    </div>
-                  </div>
-                )}
+          
 
-                {modelError && (
-                  <div className="absolute inset-0 bg-gradient-to-br from-orange-50 to-amber-50 flex items-center justify-center z-10">
-                    <div className="text-center">
-                      <div className="w-16 h-16 bg-orange-200 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <span className="text-orange-600 text-2xl">🍽️</span>
-                      </div>
-                      <p className="text-gray-500 text-lg">3D Model Unavailable</p>
-                    </div>
-                  </div>
-                )}
-
-                {isScriptLoaded && (
-                  <model-viewer
-                    ref={modelViewerRef}
-                    src="https://raw.githubusercontent.com/adarshpandey515/3dmodels/main/risotto.glb"
-                    ios-src="https://raw.githubusercontent.com/adarshpandey515/3dmodels/main/risotto.glb"
-                    alt="Today's Special - Risotto"
-                    ar
-                    ar-modes="webxr scene-viewer quick-look"
-                    auto-rotate
-                    camera-controls
-                    shadow-intensity="1"
-                    loading="lazy"
-                    reveal="interaction"
-                    interaction-prompt="none"
-                    style={{ width: "100%", height: "100%" }}
-                    onLoad={handleModelLoad}
-                    onError={handleModelError}
-                    className="rounded-3xl"
-                  />
-                )}
-
-                {modelLoaded && (
+        
+                <model-viewer
+                  ref={modelViewerRef}
+                  src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/main/2.0/Box/glTF-Binary/Box.glb"
+                  ios-src="https://raw.githubusercontent.com/lighttransport/tinyusdz/dev/models/cube.usdz"
+                  alt="Featured Dish"
+                  ar
+                  ar-modes="scene-viewer quick-look"
+                  auto-rotate
+                  camera-controls
+                  shadow-intensity="1"
+                  style={{ width: "100%", height: "100%" }}
+                  className="rounded-3xl"
+                />
+                
+               
                   <div className="absolute bottom-4 left-4 right-4 bg-white/95 backdrop-blur-sm rounded-xl p-3 sm:p-4 border border-orange-100">
                     <h3 className="font-bold text-base sm:text-lg text-gray-800">Today's Special</h3>
                     <p className="text-gray-600 text-sm">Creamy Italian Risotto</p>
@@ -195,7 +144,7 @@ export default function HomeSection() {
                       </div>
                     </div>
                   </div>
-                )}
+          
               </div>
             </div>
           </div>
