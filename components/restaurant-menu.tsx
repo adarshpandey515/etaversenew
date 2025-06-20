@@ -77,16 +77,16 @@ export default function RestaurantMenu({ onAddToCart }: RestaurantMenuProps) {
 
       <div className="relative z-10 max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 space-y-6 sm:space-y-8 lg:space-y-2">
         {/* Search and Filters */}
-        <h1 className="text-center text-4xl mb-10">Our 3d Menu </h1>
-        <div className="bg-transparent rounded-xl sm:rounded-2xl shadow-lg p-3 sm:p-4 lg:p-6 border border-black mx-2 sm:mx-0">
+        <h1 className="text-center  text-gray-700 text-4xl mb-10">Our 3d Menu </h1>
+        <div className="bg-transparent rounded-xl sm:rounded-2xl shadow-lg p-3 sm:p-4 lg:p-6 border border-gray-400 mx-2 sm:mx-0">
           <div className="flex flex-col gap-3 sm:gap-4">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 outeline-none" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 outeline-none ring-0" />
               <Input
                 placeholder="Search menu items..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 border-gray-300  text-sm sm:text-base focus:outline-none" 
+                className="pl-10 border-gray-300  text-sm sm:text-base outline-none ring-0" 
                 
               />
             </div>
@@ -157,14 +157,14 @@ export default function RestaurantMenu({ onAddToCart }: RestaurantMenuProps) {
             <div key={category} className="space-y-3 sm:space-y-4 lg:space-y-6">
               <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-800 px-2 sm:px-2">{category}</h3>
               <div className="overflow-x-auto pb-4">
-                <div className="flex space-x-3 sm:space-x-4 lg:space-x-6 px-2" style={{ width: "max-content" }}>
+                <div className="flex space-x-3 sm:space-x-4 lg:space-x-6 px-2 " style={{ width: "max-content" }}>
                   {categoryItems.map((item) => (
                     <div
                       key={item.id}
-                      className="glare-card border-2 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300  border-transparent hover:border-[#fccd3f] flex-shrink-0 w-64 sm:w-72 lg:w-80"
+                      className="glare-card border-2 backdrop-blur-sm rounded-xl  sm:rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300  border-transparent hover:border-[#fccd3f] flex-shrink-0 w-64 sm:w-72 lg:w-80"
                     >
                       {/* 3D Model Display */}
-                      <div className="h-40 sm:h-48 lg:h-56 bg-transparent relative">
+                      <div className="h-40 sm:h-48 lg:h-56 bg-transparent relative ">
                         <FoodItem3D modelUrl={item.modelUrl} itemId={item.id} />
                         <div className="absolute top-2 sm:top-3 right-2 sm:right-3">
                           <Badge className={getTypeColor(item.type)} >
@@ -178,7 +178,7 @@ export default function RestaurantMenu({ onAddToCart }: RestaurantMenuProps) {
                         <div className="flex items-start justify-between mb-2 sm:mb-3">
                           <div className="flex items-center space-x-1 sm:space-x-2">
                             {getTypeIcon(item.type)}
-                            <h4 className="font-bold text-base sm:text-lg lg:text-xl text-gray-900 line-clamp-1">
+                            <h4 className="font-bold text-base sm:text-lg lg:text-xl text-gray-600 line-clamp-1">
                               {item.name}
                             </h4>
                           </div>
@@ -192,7 +192,7 @@ export default function RestaurantMenu({ onAddToCart }: RestaurantMenuProps) {
                         </div>
 
                         <div className="flex items-center justify-between">
-                          <span className="text-xl sm:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-[#fccd3f] to-[#fbb63d] bg-clip-text text-transparent">
+                          <span className="text-xl sm:text-2xl lg:text-3xl font-bold  bg-gray-500 bg-clip-text text-transparent">
                             ₹{item.price}
                           </span>
                           <Button
@@ -212,7 +212,7 @@ export default function RestaurantMenu({ onAddToCart }: RestaurantMenuProps) {
         })}
 
         {/* Why Choose Our 3D Menu Section */}
-        <section className="py-8 sm:py-12 lg:py-20 bg-white/10 backdrop-blur-sm rounded-2xl sm:rounded-3xl border border-[#fccd3f] mx-2 sm:mx-0">
+        <section className="py-8 sm:py-12 lg:py-20 bg-white/10 backdrop-blur-sm rounded-2xl sm:rounded-3xl  mx-2 sm:mx-0">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-8 sm:mb-12 lg:mb-16">
               <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-800 mb-3 sm:mb-4">
@@ -224,7 +224,7 @@ export default function RestaurantMenu({ onAddToCart }: RestaurantMenuProps) {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
-              <div className="text-center p-4 sm:p-6 lg:p-8 rounded-xl sm:rounded-2xl bg-gradient-to-br from-[#fef4ea] to-[#fccd3f] hover:shadow-lg transition-shadow glare-card">
+              <div className="text-center p-4 sm:p-6 lg:p-8 rounded-xl sm:rounded-2xl border border-gray-500 hover:shadow-lg transition-shadow glare-card">
                 <div className="w-10 h-10 sm:w-12 sm:h-12 lg:w-16 lg:h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 lg:mb-6">
                   <Star className="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 text-black" />
                 </div>
@@ -236,7 +236,7 @@ export default function RestaurantMenu({ onAddToCart }: RestaurantMenuProps) {
                 </p>
               </div>
 
-              <div className="text-center p-4 sm:p-6 lg:p-8 rounded-xl sm:rounded-2xl bg-gradient-to-br from-[#fef4ea] to-[#fccd3f] hover:shadow-lg transition-shadow glare-card">
+              <div className="text-center p-4 sm:p-6 lg:p-8 rounded-xl sm:rounded-2xl border border-gray-500 hover:shadow-lg transition-shadow glare-card">
                 <div className="w-10 h-10 sm:w-12 sm:h-12 lg:w-16 lg:h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 lg:mb-6">
                   <Users className="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 text-black" />
                 </div>
@@ -248,9 +248,9 @@ export default function RestaurantMenu({ onAddToCart }: RestaurantMenuProps) {
                 </p>
               </div>
 
-              <div className="text-center p-4 sm:p-6 lg:p-8 rounded-xl sm:rounded-2xl bg-gradient-to-br from-[#fef4ea] to-[#fccd3f] hover:shadow-lg transition-shadow glare-card sm:col-span-2 lg:col-span-1">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 lg:w-16 lg:h-16 bg-[#fccd3f] rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 lg:mb-6">
-                  <Clock className="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 text-white" />
+              <div className="text-center p-4 sm:p-6 lg:p-8 rounded-xl sm:rounded-2xl border border-gray-500 sm:col-span-2 lg:col-span-1">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 lg:w-16 lg:h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 lg:mb-6">
+                  <Clock className="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 text-black" />
                 </div>
                 <h3 className="text-base sm:text-lg lg:text-xl font-bold text-gray-800 mb-2 sm:mb-3 lg:mb-4">
                   Quick & Easy

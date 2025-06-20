@@ -72,7 +72,7 @@ export default function HomePage() {
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-3">
               <div className="w-[200px] h-[50px] rounded-lg flex items-center justify-center">
-                <img src="/logo.png" alt="Logo" className="" />
+                <img src="/logo.png" alt="Logo" className="backdrop-blur-md" />
               </div>
             </div>
 

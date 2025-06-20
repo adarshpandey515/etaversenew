@@ -33,29 +33,29 @@ const testimonials = [
 
 export default function ContactSection() {
   return (
-    <section className="py-20 bg-white">
+    <section className="py-20 ">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         {/* Header */}
         <div className="text-center space-y-4">
-          <h2 className="text-4xl font-bold bg-gradient-to-r from-[#fccd3f] to-[#fef4ea] bg-clip-text text-transparent">
+          <h2 className="text-4xl font-bold bg-gray-800 bg-clip-text text-transparent">
             Get in Touch
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-700 max-w-3xl mx-auto">
             Have questions about our 3D menu or want to make a reservation? We'd love to hear from you!
           </p>
         </div>
 
         {/* Testimonials Row */}
-        <Card className="bg-white/80 backdrop-blur-sm border-[#fccd3f]">
+        <Card className="  bg-transparent border-[0px] ">
           <CardHeader>
             <CardTitle className="text-2xl text-gray-800 text-center">What Our Customers Say</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="flex flex-col md:flex-row justify-center gap-6 md:gap-8">
+            <div className="flex flex-col md:flex-row  pt-5 justify-center gap-6 md:gap-8">
               {testimonials.map((review, i) => (
                 <div
                   key={review.name}
-                  className="relative p-6 rounded-2xl shadow-md bg-gradient-to-br from-[#fccd3f] to-[#fef4ea] flex flex-col items-center gap-2 glare-card max-w-xs w-full"
+                  className="relative p-6  flex flex-col items-center gap-2  max-w-xs w-full"
                 >
                   <img
                     src={review.img}
@@ -80,7 +80,7 @@ export default function ContactSection() {
         <div className="flex flex-col lg:flex-row gap-12 items-stretch">
           {/* Visit Us */}
           <div className="flex-1 flex">
-            <Card className="bg-white/80 backdrop-blur-sm border-[#fccd3f] flex flex-col w-full">
+            <Card className=" bg-transparent border-[#fccd3f] flex flex-col w-full">
               <CardHeader>
                 <CardTitle className="text-2xl text-gray-800">Visit Us</CardTitle>
               </CardHeader>
@@ -138,7 +138,7 @@ export default function ContactSection() {
 
           {/* Send us a Message */}
           <div className="flex-1 flex">
-            <Card className="bg-white/80 backdrop-blur-sm border-[#fccd3f] flex flex-col w-full">
+            <Card className="bg-transparent backdrop-blur-sm border-[#fccd3f] flex flex-col w-full">
               <CardHeader>
                 <CardTitle className="text-2xl text-gray-800">Send us a Message</CardTitle>
               </CardHeader>
