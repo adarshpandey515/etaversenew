@@ -18,7 +18,8 @@ export default function RestaurantMenu({ onAddToCart }: RestaurantMenuProps) {
   const [menuItems, setMenuItems] = useState<any[]>([])
 
   useEffect(() => {
-    setMenuItems(getMenuItems())
+    
+    setMenuItems(getMenuItems().slice(1))
   }, [])
 
   const categories = useMemo(() => {
@@ -67,20 +68,12 @@ export default function RestaurantMenu({ onAddToCart }: RestaurantMenuProps) {
   }
 
   return (
-    <section id="menu-section" className="py-8 sm:py-12 lg:py-20 bg-gradient-to-br from-gray-50 to-orange-50">
-      <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 space-y-6 sm:space-y-8 lg:space-y-12">
-        {/* Header */}
-        <div className="text-center space-y-3 sm:space-y-4">
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-orange-600 to-amber-600 bg-clip-text text-transparent">
-            Our 3D Menu
-          </h2>
-          <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-3xl mx-auto px-4">
-            Explore our delicious dishes in stunning 3D detail and experience them in AR
-          </p>
-        </div>
+    <section id="menu-section" className="py-2 sm:py-4 lg:py-4 bg-gradient-to-br bg-transparent">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 space-y-6 sm:space-y-8 lg:space-y-2">
+        
 
         {/* Search and Filters */}
-        <div className="bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-lg p-3 sm:p-4 lg:p-6 border border-orange-100 mx-2 sm:mx-0">
+        <div className="bg-transparent rounded-xl sm:rounded-2xl shadow-lg p-3 sm:p-4 lg:p-6 border border-orange-100 mx-2 sm:mx-0">
           <div className="flex flex-col gap-3 sm:gap-4">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
