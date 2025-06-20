@@ -104,8 +104,8 @@ export default function HomeSection() {
             </div>
 
             {/* Right Content - 3D Model */}
-            <div className="relative order-1 lg:order-2">
-              <div className="relative w-full h-64 sm:h-80 lg:h-[420px]  pb-12 rounded-3xl shadow-2xl overflow-visible">
+            <div className="relative order-1 lg:order-2 ">
+              <div className="relative w-full h-64 sm:h-80 lg:h-[420px]  pb-20 rounded-3xl shadow-2xl overflow-visible">
                 {featuredItem && (
                   <model-viewer
                     ref={modelViewerRef}
@@ -117,7 +117,7 @@ export default function HomeSection() {
                     camera-controls
                     shadow-intensity="1"
                     style={{ width: "100%", height: "100%", bottom: "10px" }}
-                    className="rounded-3xl pb-10"
+                    className="rounded-3xl  "
                   />
                 )}
 

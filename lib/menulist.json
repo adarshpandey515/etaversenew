@@ -26,7 +26,7 @@
     "type": "non-veg",
     "category": "Starters",
     "ingredients": ["Pepperoni", "Mozzarella", "Tomato sauce", "Oregano", "Cheese burst crust"],
-    "modelUrl": "https://raw.githubusercontent.com/adarshpandey515/3dmodels/main/Pepperoni%20pizza.glb",
+    "modelUrl": "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Avocado/glTF-Binary/Avocado.glb",
     "description": "Melty pizza overloaded with pepperoni and mozzarella in every bite."
   },
   {
