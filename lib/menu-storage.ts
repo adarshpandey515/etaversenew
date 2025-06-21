@@ -1,7 +1,12 @@
-import defaultMenuItems from '../public/menulist.json';
+let defaultMenuItems :any =[]
+
+fetch(`https://raw.githubusercontent.com/adarshpandey515/etaversenew/main/public/menulist.json?cb=${Date.now()}`)
+  .then(res => res.json())
+  .then(data => defaultMenuItems = data);
+
 
 // Now you can use defaultMenuItems as an array
-console.log(defaultMenuItems[0].name); // "Zinger Burger Deluxe"
+console.log(defaultMenuItems); // "Zinger Burger Deluxe"
 
   // Get menu items from localStorage or return default items
   export function getMenuItems() {

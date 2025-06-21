@@ -93,7 +93,6 @@ export default function ModelPreview({ modelUrl }: ModelPreviewProps) {
         auto-rotate
         camera-controls
         shadow-intensity="1"
-        loading="lazy"
         reveal="interaction"
         interaction-prompt="none"
         style={{ width: "100%", height: "100%" }}
