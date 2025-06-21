@@ -1,37 +1,85 @@
-"use client"
-
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { MapPin, Phone, Mail, Clock, Star } from "lucide-react"
+"use client";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { MapPin, Phone, Mail, Clock, Star } from "lucide-react";
 
 const testimonials = [
   {
     name: "Sarah Johnson",
     img: "https://randomuser.me/api/portraits/women/44.jpg",
     rating: 5,
-    text:
-      "The 3D menu is absolutely amazing! Being able to see the food in AR before ordering made our dining experience so much better.",
+    text: "The 3D menu is absolutely amazing! Being able to see the food in AR before ordering made our dining experience so much better.",
   },
   {
     name: "Mike Chen",
     img: "https://randomuser.me/api/portraits/men/32.jpg",
     rating: 5,
-    text:
-      "Revolutionary dining experience! The food looks exactly like the 3D models. Highly recommended!",
+    text: "Revolutionary dining experience! The food looks exactly like the 3D models. Highly recommended!",
   },
   {
     name: "Priya Singh",
     img: "https://randomuser.me/api/portraits/women/68.jpg",
     rating: 5,
-    text:
-      "I loved being able to show my kids the food in 3D before ordering. Fun and useful!",
+    text: "I loved being able to show my kids the food in 3D before ordering. Fun and useful!",
   },
-]
+];
 
 export default function ContactSection() {
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    subject: "",
+    message: "",
+  });
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setFormData({ ...formData, [e.target.id]: e.target.value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const fullName = `${formData.firstName} ${formData.lastName}`;
+    const subject = formData.subject || "No Subject";
+    const text = `${fullName} (${formData.email}) says: ${formData.message}`;
+    const html = `
+      <p><strong>Name:</strong> ${fullName}</p>
+      <p><strong>Email:</strong> ${formData.email}</p>
+      <p><strong>Phone:</strong> ${formData.phone || "N/A"}</p>
+      <p><strong>Message:</strong><br/>${formData.message}</p>
+      <p><strong>Subject:</strong> ${formData.subject}</p>
+    `;
+
+    try {
+      const response = await fetch('/api/send-mail', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+            to: "siddheshmane043@gmail.com",
+            subject,
+            text,
+            html,
+          }),
+});
+
+
+      const result = await response.json();
+      console.log("Email sent response:", result);
+      alert("✅ Email sent successfully!");
+    } catch (error) {
+      console.error("Error sending email:", error);
+      alert("❌ Failed to send email. Check the console for more details.");
+    }
+  };
+
   return (
     <section className="py-20 ">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
@@ -41,14 +89,17 @@ export default function ContactSection() {
             Get in Touch
           </h2>
           <p className="text-xl text-gray-700 max-w-3xl mx-auto">
-            Have questions about our 3D menu or want to make a reservation? We'd love to hear from you!
+            Have questions about our 3D menu or want to make a reservation? We'd
+            love to hear from you!
           </p>
         </div>
 
         {/* Testimonials Row */}
         <Card className="  bg-transparent border-[0px] ">
           <CardHeader>
-            <CardTitle className="text-2xl text-gray-800 text-center">What Our Customers Say</CardTitle>
+            <CardTitle className="text-2xl text-gray-800 text-center">
+              What Our Customers Say
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex flex-col md:flex-row  pt-5 justify-center gap-6 md:gap-8">
@@ -65,11 +116,18 @@ export default function ContactSection() {
                   />
                   <div className="flex items-center space-x-1">
                     {[...Array(review.rating)].map((_, idx) => (
-                      <Star key={idx} className="w-5 h-5 fill-[#fccd3f] text-[#fccd3f]" />
+                      <Star
+                        key={idx}
+                        className="w-5 h-5 fill-[#fccd3f] text-[#fccd3f]"
+                      />
                     ))}
                   </div>
-                  <p className="text-gray-700 italic text-center">"{review.text}"</p>
-                  <p className="text-sm text-gray-600 mt-2 font-semibold">{review.name}</p>
+                  <p className="text-gray-700 italic text-center">
+                    "{review.text}"
+                  </p>
+                  <p className="text-sm text-gray-600 mt-2 font-semibold">
+                    {review.name}
+                  </p>
                 </div>
               ))}
             </div>
@@ -82,7 +140,9 @@ export default function ContactSection() {
           <div className="flex-1 flex">
             <Card className=" bg-transparent border-gray-400 flex flex-col w-full">
               <CardHeader>
-                <CardTitle className="text-2xl text-gray-800">Visit Us</CardTitle>
+                <CardTitle className="text-2xl text-gray-800">
+                  Visit Us
+                </CardTitle>
               </CardHeader>
               <CardContent className="flex-grow flex flex-col justify-center space-y-6">
                 <div className="flex items-start space-x-4">
@@ -92,9 +152,9 @@ export default function ContactSection() {
                   <div>
                     <h3 className="font-semibold text-gray-800">Address</h3>
                     <p className="text-gray-600">
-                      123 Food Street, Culinary District
+                      Ram mandir , Mumbai
                       <br />
-                      New York, NY 10001
+                      Maharashtra, India
                     </p>
                   </div>
                 </div>
@@ -105,7 +165,7 @@ export default function ContactSection() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-800">Phone</h3>
-                    <p className="text-gray-600">+1 (555) 123-4567</p>
+                    <p className="text-gray-600 ">+91 9004353415</p>
                   </div>
                 </div>
 
@@ -115,7 +175,14 @@ export default function ContactSection() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-800">Email</h3>
-                    <p className="text-gray-600">hello@tastyrestaurant.com</p>
+                    <p className="text-gray-600 ">
+                      <a
+                        href="mailto:pandeyadarsh515@gmail.com"
+                        className="text-gray-600 hover:underline"
+                      >
+                        pandeyadarsh515@gmail.com
+                      </a>
+                    </p>
                   </div>
                 </div>
 
@@ -140,18 +207,32 @@ export default function ContactSection() {
           <div className="flex-1 flex">
             <Card className="bg-transparent backdrop-blur-sm border-gray-400 flex flex-col w-full">
               <CardHeader>
-                <CardTitle className="text-2xl text-gray-800">Send us a Message</CardTitle>
+                <CardTitle className="text-2xl text-gray-800">
+                  Send us a Message
+                </CardTitle>
               </CardHeader>
               <CardContent className="flex-grow flex flex-col justify-center">
-                <form className="space-y-6">
+                <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="firstName">First Name</Label>
-                      <Input id="firstName" placeholder="John" className="border-gray-400 focus:border-gray-400" />
+                      <Input
+                        id="firstName"
+                        value={formData.firstName}
+                        onChange={handleChange}
+                        placeholder="John"
+                        className="border-gray-400 focus:border-gray-400"
+                      />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="lastName">Last Name</Label>
-                      <Input id="lastName" placeholder="Doe" className="border-gray-400 focus:border-gray-400" />
+                      <Input
+                        id="lastName"
+                        value={formData.lastName}
+                        onChange={handleChange}
+                        placeholder="Doe"
+                        className="border-gray-400 focus:border-gray-400"
+                      />
                     </div>
                   </div>
 
@@ -160,6 +241,8 @@ export default function ContactSection() {
                     <Input
                       id="email"
                       type="email"
+                      value={formData.email}
+                      onChange={handleChange}
                       placeholder="john@example.com"
                       className="border-gray-400 focus:border-gray-400"
                     />
@@ -170,6 +253,8 @@ export default function ContactSection() {
                     <Input
                       id="phone"
                       type="tel"
+                      value={formData.phone}
+                      onChange={handleChange}
                       placeholder="+1 (555) 123-4567"
                       className="border-gray-400 focus:border-gray-400"
                     />
@@ -179,6 +264,8 @@ export default function ContactSection() {
                     <Label htmlFor="subject">Subject</Label>
                     <Input
                       id="subject"
+                      value={formData.subject}
+                      onChange={handleChange}
                       placeholder="Reservation inquiry"
                       className="border-gray-400 focus:border-gray-400"
                     />
@@ -188,6 +275,8 @@ export default function ContactSection() {
                     <Label htmlFor="message">Message</Label>
                     <Textarea
                       id="message"
+                      value={formData.message}
+                      onChange={handleChange}
                       placeholder="Tell us how we can help you..."
                       rows={5}
                       className="border-gray-400 focus:border-gray-400"
@@ -218,7 +307,11 @@ export default function ContactSection() {
           left: -60%;
           width: 200%;
           height: 200%;
-          background: linear-gradient(120deg, rgba(255,255,255,0.18) 0%, rgba(252,205,63,0.22) 100%);
+          background: linear-gradient(
+            120deg,
+            rgba(255, 255, 255, 0.18) 0%,
+            rgba(252, 205, 63, 0.22) 100%
+          );
           transform: rotate(8deg);
           pointer-events: none;
           z-index: 1;
@@ -230,5 +323,5 @@ export default function ContactSection() {
         }
       `}</style>
     </section>
-  )
+  );
 }

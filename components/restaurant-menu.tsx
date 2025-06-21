@@ -161,7 +161,7 @@ export default function RestaurantMenu({ onAddToCart }: RestaurantMenuProps) {
                   {categoryItems.map((item) => (
                     <div
                       key={item.id}
-                      className="glare-card border-[1px] backdrop-blur-sm rounded-xl  sm:rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 hover:border-2  border-gray-500 hover:border-[#fccd3f] flex-shrink-0 w-64 sm:w-72 lg:w-80"
+                      className="glare-card border-2 backdrop-blur-sm rounded-xl  sm:rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 hover:border-2  border-gray-500 hover:border-[#fccd3f] flex-shrink-0 w-64 sm:w-72 lg:w-80"
                     >
                       {/* 3D Model Display */}
                       <div className="h-40 sm:h-48 lg:h-56  bg-transparent relative ">
@@ -197,7 +197,7 @@ export default function RestaurantMenu({ onAddToCart }: RestaurantMenuProps) {
                           </span>
                           <Button
                             onClick={() => onAddToCart(item)}
-                            className="bg-[#fbb63d] text-white px-3 sm:px-4 lg:px-6 py-1.5 sm:py-2 rounded-lg sm:rounded-xl text-xs sm:text-sm lg:text-base"
+                            className="bg-gray-600 hover:bg-[#fbb63d] text-white px-3 sm:px-4 lg:px-6 py-1.5 sm:py-2 rounded-lg sm:rounded-xl text-xs sm:text-sm lg:text-base"
                           >
                             Add to Cart
                           </Button>

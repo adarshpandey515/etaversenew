@@ -1,57 +1,58 @@
-let defaultMenuItems :any =[]
+// let defaultMenuItems :any =[]
 
-fetch(`https://raw.githubusercontent.com/adarshpandey515/etaversenew/main/public/menulist.json?cb=${Date.now()}`)
-  .then(res => res.json())
-  .then(data => defaultMenuItems = data);
-
+// fetch(`https://raw.githubusercontent.com/adarshpandey515/etaversenew/main/public/menulist.json?cb=${Date.now()}`)
+//   .then(res => res.json())
+//   .then(data => defaultMenuItems = data);
+ 
+import defaultMenuItems from "@/public/menulist.json"
 
 // Now you can use defaultMenuItems as an array
-console.log(defaultMenuItems); // "Zinger Burger Deluxe"
+// console.log(defaultMenuItems); // "Zinger Burger Deluxe"
 
   // Get menu items from localStorage or return default items
   export function getMenuItems() {
-    if (typeof window === "undefined") {
-      return defaultMenuItems
-    }
 
-    try {
-      const stored = localStorage.getItem("menuItems")
-      if (stored) {
-        return JSON.parse(stored)
-      }
-      // Initialize with default items if nothing stored
-      localStorage.setItem("menuItems", JSON.stringify(defaultMenuItems))
-      return defaultMenuItems
-    } catch (error) {
-      console.error("Error loading menu items:", error)
-      return defaultMenuItems
-    }
+    return defaultMenuItems
+    
+
+  //   // try {
+  //   //   const stored = localStorage.getItem("menuItems")
+  //   //   if (stored) {
+  //   //     return JSON.parse(stored)
+  //   //   }
+  //   //   // Initialize with default items if nothing stored
+  //   //   localStorage.setItem("menuItems", JSON.stringify(defaultMenuItems))
+  //   //   return defaultMenuItems
+  //   // } catch (error) {
+  //   //   console.error("Error loading menu items:", error)
+  //   //   return defaultMenuItems
+  //   // }
   }
 
-  // Add a new menu item
+  // // Add a new menu item
   export function addMenuItem(item: any) {
     if (typeof window === "undefined") {
       return
     }
 
-    try {
-      const currentItems = getMenuItems()
-      const newItems = [...currentItems, item]
-      localStorage.setItem("menuItems", JSON.stringify(newItems))
-    } catch (error) {
-      console.error("Error saving menu item:", error)
-    }
+    // try {
+    //   const currentItems = getMenuItems()
+    //   const newItems = [...currentItems, item]
+    //   localStorage.setItem("menuItems", JSON.stringify(newItems))
+    // } catch (error) {
+    //   console.error("Error saving menu item:", error)
+    // }
   }
 
-  // Update menu items
+  // // Update menu items
   export function updateMenuItems(items: any[]) {
     if (typeof window === "undefined") {
       return
     }
 
-    try {
-      localStorage.setItem("menuItems", JSON.stringify(items))
-    } catch (error) {
-      console.error("Error updating menu items:", error)
-    }
+    // try {
+    //   localStorage.setItem("menuItems", JSON.stringify(items))
+    // } catch (error) {
+    //   console.error("Error updating menu items:", error)
+    // }
   }

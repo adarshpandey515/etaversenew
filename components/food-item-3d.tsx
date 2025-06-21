@@ -56,7 +56,7 @@ export default function FoodItem3D({ modelUrl, itemId }: FoodItem3DProps) {
   };
 
   return (
-    <div ref={modelViewerRef} className="w-full h-full relative">
+    <div ref={modelViewerRef} className="w-full h-full relative z-100">
       {shouldLoad ? (
         <>
           <model-viewer
@@ -75,7 +75,7 @@ export default function FoodItem3D({ modelUrl, itemId }: FoodItem3DProps) {
           <Button
             onClick={handleViewInAR}
             size="sm"
-            className="absolute bottom-2 left-2 bg-[#fbb63d] text-black hover:bg-[#fef4ea] text-xs px-3 py-1 rounded-lg shadow-lg"
+            className="absolute bottom-2 bg-gray-500 left-2 hover:bg-[#fbb63d] text-white  text-xs px-3 py-1 rounded-lg shadow-lg"
           >
             View In 3D
           </Button>

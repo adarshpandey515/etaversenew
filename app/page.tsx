@@ -58,7 +58,7 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#fef4ea] via-white to-[#fccd3f]">
+    <div className="min-h-screen bg-gradient-to-br from-white via-[#fff9c4] to-[#ffe0b2]">
       {/* Animated Fixed Background */}
       <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-[#fccd3f] to-[#fef4ea] rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
@@ -81,14 +81,14 @@ export default function HomePage() {
               <Button
                 variant="outline"
                 onClick={() => setShowUpload(true)}
-                className="flex items-center space-x-2 border-[#fccd3f] hover:bg-[#fef4ea]"
+                className="flex items-center space-x-2  hover:bg-[#fef4ea]"
               >
                 <Upload className="w-4 h-4" />
               </Button>
 
               <Button
                 variant="outline"
-                className="relative border-[#fccd3f] hover:bg-[#fef4ea]"
+                className="relative  hover:bg-[#fef4ea]"
                 onClick={() => setShowCart(true)}
               >
                 <ShoppingCart className="w-4 h-4 mr-2" />
