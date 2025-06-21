@@ -86,7 +86,7 @@ export default function RestaurantMenu({ onAddToCart }: RestaurantMenuProps) {
                 placeholder="Search menu items..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 border-gray-300  text-sm sm:text-base outline-none ring-0" 
+                className="pl-10 border-gray-300  text-sm sm:text-base focus:outline-none focus:ring-0 " 
                 
               />
             </div>
@@ -161,10 +161,10 @@ export default function RestaurantMenu({ onAddToCart }: RestaurantMenuProps) {
                   {categoryItems.map((item) => (
                     <div
                       key={item.id}
-                      className="glare-card border-2 backdrop-blur-sm rounded-xl  sm:rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300  border-transparent hover:border-[#fccd3f] flex-shrink-0 w-64 sm:w-72 lg:w-80"
+                      className="glare-card border-[1px] backdrop-blur-sm rounded-xl  sm:rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 hover:border-2  border-gray-500 hover:border-[#fccd3f] flex-shrink-0 w-64 sm:w-72 lg:w-80"
                     >
                       {/* 3D Model Display */}
-                      <div className="h-40 sm:h-48 lg:h-56 bg-transparent relative ">
+                      <div className="h-40 sm:h-48 lg:h-56  bg-transparent relative ">
                         <FoodItem3D modelUrl={item.modelUrl} itemId={item.id} />
                         <div className="absolute top-2 sm:top-3 right-2 sm:right-3">
                           <Badge className={getTypeColor(item.type)} >

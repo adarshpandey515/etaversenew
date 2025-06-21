@@ -1,4 +1,4 @@
-import defaultMenuItems from './menulist.json';
+import defaultMenuItems from '../public/menulist.json';
 
 // Now you can use defaultMenuItems as an array
 console.log(defaultMenuItems[0].name); // "Zinger Burger Deluxe"

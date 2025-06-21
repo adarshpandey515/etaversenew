@@ -80,14 +80,14 @@ export default function ContactSection() {
         <div className="flex flex-col lg:flex-row gap-12 items-stretch">
           {/* Visit Us */}
           <div className="flex-1 flex">
-            <Card className=" bg-transparent border-[#fccd3f] flex flex-col w-full">
+            <Card className=" bg-transparent border-gray-400 flex flex-col w-full">
               <CardHeader>
                 <CardTitle className="text-2xl text-gray-800">Visit Us</CardTitle>
               </CardHeader>
               <CardContent className="flex-grow flex flex-col justify-center space-y-6">
                 <div className="flex items-start space-x-4">
                   <div className="w-12 h-12 bg-[#fccd3f] bg-opacity-30 rounded-xl flex items-center justify-center">
-                    <MapPin className="w-6 h-6 text-[#fccd3f]" />
+                    <MapPin className="w-6 h-6 text-black" />
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-800">Address</h3>
@@ -101,7 +101,7 @@ export default function ContactSection() {
 
                 <div className="flex items-start space-x-4">
                   <div className="w-12 h-12 bg-[#fccd3f] bg-opacity-30 rounded-xl flex items-center justify-center">
-                    <Phone className="w-6 h-6 text-[#fccd3f]" />
+                    <Phone className="w-6 h-6 text-black" />
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-800">Phone</h3>
@@ -111,7 +111,7 @@ export default function ContactSection() {
 
                 <div className="flex items-start space-x-4">
                   <div className="w-12 h-12 bg-[#fccd3f] bg-opacity-30 rounded-xl flex items-center justify-center">
-                    <Mail className="w-6 h-6 text-[#fccd3f]" />
+                    <Mail className="w-6 h-6 text-black" />
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-800">Email</h3>
@@ -121,7 +121,7 @@ export default function ContactSection() {
 
                 <div className="flex items-start space-x-4">
                   <div className="w-12 h-12 bg-[#fccd3f] bg-opacity-30 rounded-xl flex items-center justify-center">
-                    <Clock className="w-6 h-6 text-[#fccd3f]" />
+                    <Clock className="w-6 h-6 text-black" />
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-800">Hours</h3>
@@ -138,7 +138,7 @@ export default function ContactSection() {
 
           {/* Send us a Message */}
           <div className="flex-1 flex">
-            <Card className="bg-transparent backdrop-blur-sm border-[#fccd3f] flex flex-col w-full">
+            <Card className="bg-transparent backdrop-blur-sm border-gray-400 flex flex-col w-full">
               <CardHeader>
                 <CardTitle className="text-2xl text-gray-800">Send us a Message</CardTitle>
               </CardHeader>
@@ -147,11 +147,11 @@ export default function ContactSection() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="firstName">First Name</Label>
-                      <Input id="firstName" placeholder="John" className="border-[#fccd3f] focus:border-[#fccd3f]" />
+                      <Input id="firstName" placeholder="John" className="border-gray-400 focus:border-gray-400" />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="lastName">Last Name</Label>
-                      <Input id="lastName" placeholder="Doe" className="border-[#fccd3f] focus:border-[#fccd3f]" />
+                      <Input id="lastName" placeholder="Doe" className="border-gray-400 focus:border-gray-400" />
                     </div>
                   </div>
 
@@ -161,7 +161,7 @@ export default function ContactSection() {
                       id="email"
                       type="email"
                       placeholder="john@example.com"
-                      className="border-[#fccd3f] focus:border-[#fccd3f]"
+                      className="border-gray-400 focus:border-gray-400"
                     />
                   </div>
 
@@ -171,7 +171,7 @@ export default function ContactSection() {
                       id="phone"
                       type="tel"
                       placeholder="+1 (555) 123-4567"
-                      className="border-[#fccd3f] focus:border-[#fccd3f]"
+                      className="border-gray-400 focus:border-gray-400"
                     />
                   </div>
 
@@ -180,7 +180,7 @@ export default function ContactSection() {
                     <Input
                       id="subject"
                       placeholder="Reservation inquiry"
-                      className="border-[#fccd3f] focus:border-[#fccd3f]"
+                      className="border-gray-400 focus:border-gray-400"
                     />
                   </div>
 
@@ -190,13 +190,13 @@ export default function ContactSection() {
                       id="message"
                       placeholder="Tell us how we can help you..."
                       rows={5}
-                      className="border-[#fccd3f] focus:border-[#fccd3f]"
+                      className="border-gray-400 focus:border-gray-400"
                     />
                   </div>
 
                   <Button
                     type="submit"
-                    className="w-full bg-gradient-to-r from-[#fccd3f] to-[#fef4ea] hover:from-[#fccd3f] hover:to-[#fef4ea] text-gray-800 py-3 font-semibold"
+                    className="w-full bg-gradient-to-r from-[#6c6a66] to-[#fef4ea] hover:from-[#fccd3f] hover:to-[#fef4ea] text-gray-800 py-3 font-semibold"
                   >
                     Send Message
                   </Button>
