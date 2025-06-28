@@ -60,11 +60,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-white via-[#fff9c4] to-[#ffe0b2]">
       {/* Animated Fixed Background */}
-      <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-[#f1d581] to-[#fef4ea] rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-br from-[#fef4ea] to-[#e9c764] rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
-        <div className="absolute top-40 left-1/2 w-80 h-80 bg-gradient-to-br from-[#eeda9c] to-[#fef4ea] rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000"></div>
-      </div>
+   
 
       {/* Header */}
       <header className="backdrop-blur-md shadow-lg border-b sticky top-0 z-50">

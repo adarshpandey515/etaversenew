@@ -7,6 +7,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MapPin, Phone, Mail, Clock, Star } from "lucide-react";
 
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+}  from "@/components/ui/accordion";
 const testimonials = [
   {
     name: "Sarah Johnson",
@@ -82,7 +88,7 @@ export default function ContactSection() {
 
   return (
     <section className="py-20 ">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 2">
         {/* Header */}
         <div className="text-center space-y-4">
           <h2 className="text-4xl font-bold bg-gray-800 bg-clip-text text-transparent">
@@ -93,7 +99,90 @@ export default function ContactSection() {
             love to hear from you!
           </p>
         </div>
+        <div className="flex items-center justify-center">
 
+        <Accordion
+          type="single"
+          collapsible
+          className="w-full items-center lg:w-3/4"
+          defaultValue="item-3"
+        >
+          <AccordionItem value="item-1">
+            <AccordionTrigger>How does the 3D menu work?</AccordionTrigger>
+            <AccordionContent className="flex flex-col gap-4 text-balance">
+              <p>
+                Our 3D menu offers an immersive dining experience by allowing
+                you to view dishes from all angles. Simply click or tap on a
+                dish to explore its ingredients, presentation, and plating in
+                full 3D.
+              </p>
+              <p>
+                No special software is needed — it works directly in your
+                browser, optimized for both desktop and mobile.
+              </p>
+            </AccordionContent>
+          </AccordionItem>
+
+          <AccordionItem value="item-2">
+            <AccordionTrigger>
+              Can I place an order through the 3D menu?
+            </AccordionTrigger>
+            <AccordionContent className="flex flex-col gap-4 text-balance">
+              <p>
+                Yes, once you've selected a dish through the 3D interface, you
+                can add it to your cart and place your order directly from the
+                menu.
+              </p>
+              <p>
+                Payment options include credit/debit cards, digital wallets, and
+                contactless payments if you're dining in.
+              </p>
+            </AccordionContent>
+          </AccordionItem>
+
+          <AccordionItem value="item-3">
+            <AccordionTrigger>
+              Is the 3D experience mobile-friendly?
+            </AccordionTrigger>
+            <AccordionContent className="flex flex-col gap-4 text-balance">
+              <p>
+                Absolutely! Our 3D menu is fully responsive and optimized for
+                mobile devices. Whether you're browsing on a smartphone or
+                tablet, you'll enjoy a smooth and engaging experience.
+              </p>
+              <p>
+                For the best experience, use modern browsers like Chrome,
+                Safari, or Firefox.
+              </p>
+            </AccordionContent>
+          </AccordionItem>
+
+          <AccordionItem value="item-4">
+            <AccordionTrigger>
+              What if a dish looks different in real life?
+            </AccordionTrigger>
+            <AccordionContent className="flex flex-col gap-4 text-balance">
+              <p>
+                Our 3D models are crafted to closely match the actual
+                presentation of each dish. Minor variations may occur due to
+                seasonal ingredients or plating by different chefs, but we
+                strive for visual accuracy.
+              </p>
+            </AccordionContent>
+          </AccordionItem>
+
+          <AccordionItem value="item-5">
+            <AccordionTrigger>Do I need any plugins or apps?</AccordionTrigger>
+            <AccordionContent className="flex flex-col gap-4 text-balance">
+              <p>
+                Nope! Our 3D restaurant menu runs natively in your browser using
+                WebGL and other modern web technologies — no downloads or
+                installations needed.
+              </p>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+        </div>
         {/* Testimonials Row */}
         <Card className="  bg-transparent border-[0px] ">
           <CardHeader>
@@ -192,7 +281,7 @@ export default function ContactSection() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-800">Hours</h3>
-                    <div className="text-gray-600 space-y-1">
+                    <div className="text-gray-600 ">
                       <p>Mon - Thu: 11:00 AM - 10:00 PM</p>
                       <p>Fri - Sat: 11:00 AM - 11:00 PM</p>
                       <p>Sunday: 12:00 PM - 9:00 PM</p>
@@ -212,9 +301,9 @@ export default function ContactSection() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="flex-grow flex flex-col justify-center">
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
+                <form onSubmit={handleSubmit} className="space-y-1">
+                  <div className="grid grid-cols-1 md:grid-cols-2">
+                    <div className=" pr-1 ">
                       <Label htmlFor="firstName">First Name</Label>
                       <Input
                         id="firstName"
@@ -224,7 +313,7 @@ export default function ContactSection() {
                         className="border-gray-400 focus:border-gray-400"
                       />
                     </div>
-                    <div className="space-y-2">
+                    <div className="pl-1">
                       <Label htmlFor="lastName">Last Name</Label>
                       <Input
                         id="lastName"
@@ -236,7 +325,7 @@ export default function ContactSection() {
                     </div>
                   </div>
 
-                  <div className="space-y-2">
+                  <div className="">
                     <Label htmlFor="email">Email</Label>
                     <Input
                       id="email"
@@ -248,7 +337,7 @@ export default function ContactSection() {
                     />
                   </div>
 
-                  <div className="space-y-2">
+                  <div className="">
                     <Label htmlFor="phone">Phone (Optional)</Label>
                     <Input
                       id="phone"
@@ -260,7 +349,7 @@ export default function ContactSection() {
                     />
                   </div>
 
-                  <div className="space-y-2">
+                  <div className="">
                     <Label htmlFor="subject">Subject</Label>
                     <Input
                       id="subject"
@@ -271,7 +360,7 @@ export default function ContactSection() {
                     />
                   </div>
 
-                  <div className="space-y-2">
+                  <div className="">
                     <Label htmlFor="message">Message</Label>
                     <Textarea
                       id="message"
@@ -285,7 +374,7 @@ export default function ContactSection() {
 
                   <Button
                     type="submit"
-                    className="w-full bg-gradient-to-r from-[#6c6a66] to-[#fef4ea] hover:from-[#fccd3f] hover:to-[#fef4ea] text-gray-800 py-3 font-semibold"
+                    className="w-full mt-2 bg-gradient-to-r from-[#6c6a66] to-[#fef4ea] hover:from-[#fccd3f] hover:to-[#fef4ea] text-gray-800 py-3 font-semibold"
                   >
                     Send Message
                   </Button>
