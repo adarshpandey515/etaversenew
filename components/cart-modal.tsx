@@ -5,6 +5,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Badge } from "@/components/ui/badge"
 import { Minus, Plus, Trash2, ShoppingBag } from "lucide-react"
 import { toast } from "@/hooks/use-toast"
+import React, { useState } from "react"
 
 interface CartItem {
   id: number
@@ -32,12 +33,30 @@ export default function CartModal({
   onRemoveItem,
   totalPrice,
 }: CartModalProps) {
+  const [tableNo, setTableNo] = useState<string>("")
+  const [error, setError] = useState<string>("")
+
   const handlePlaceOrder = () => {
+    if (tableNo.trim() === "") {
+      setError("Please provide a table number or write 'NA' if you don't know.");
+      return;
+    } else {
+      setError(""); // Clear any previous error
+    }
+
     toast({
       title: "Order Placed!",
       description: `Your order of ₹${totalPrice + Math.round(totalPrice * 0.1)} has been placed successfully. We'll prepare it shortly!`,
-    })
-    onClose()
+    });
+
+    // Calculate total amount (including taxes)
+    const totalAmount = totalPrice + Math.round(totalPrice * 0.1);
+
+    // Create the UPI payment URL dynamically
+    const upiUrl = `upi://pay?pa=pandeyadarsh515@oksbi&pn=AdarshPandey&cu=INR&am=${totalAmount}`;
+
+    // Redirect to the UPI payment URL
+    window.location.href = upiUrl;
   }
 
   const getTypeColor = (type: string) => {
@@ -120,6 +139,22 @@ export default function CartModal({
               ))}
             </div>
 
+            {/* Table Number Input */}
+            <div className="w-max-300px">
+              <label htmlFor="tableNo" className="block text-sm font-medium text-gray-700 mb-2">
+                Table No:
+              </label>
+              <input
+                type="text"
+                id="tableNo"
+                value={tableNo}
+                onChange={(e) => setTableNo(e.target.value)}
+                className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                placeholder="Enter your table number"
+              />
+              {error && <p className="text-sm text-red-500 mt-1">{error}</p>}
+            </div>
+
             {/* Order Summary */}
             <div className="border-t pt-4 sm:pt-6">
               <div className="bg-gradient-to-r from-orange-50 to-amber-50 rounded-xl p-4 sm:p-6">
@@ -145,7 +180,7 @@ export default function CartModal({
                     onClick={handlePlaceOrder}
                     className="w-full bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white py-2 sm:py-3 text-sm sm:text-lg font-semibold"
                   >
-                    Place Order
+                    Proceed for Payment
                   </Button>
                 </div>
               </div>
@@ -156,3 +191,4 @@ export default function CartModal({
     </Dialog>
   )
 }
+// Note: Ensure you have the necessary styles and components imported for this code to work correctly.
