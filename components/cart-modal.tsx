@@ -53,7 +53,7 @@ export default function CartModal({
     const totalAmount = totalPrice + Math.round(totalPrice * 0.1);
 
     // Create the UPI payment URL dynamically
-    const upiUrl = `upi://pay?pa=pandeyadarsh515@oksbi&pn=AdarshPandey&cu=INR&am=${totalAmount}`;
+    const upiUrl = `upi://pay?pa=pandeyadarsh515@okaxis&pn=AdarshPandey&cu=INR&am=${totalAmount}`;
 
     // Redirect to the UPI payment URL
     window.location.href = upiUrl;
