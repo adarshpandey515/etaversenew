@@ -19,6 +19,26 @@
     "modelUrl": "https://raw.githubusercontent.com/adarshpandey515/3dmodels/main/PequenoAlmocoIngles.glb",
     "description": "Delicate sponge cake layered with whipped cream and fresh strawberries."
   },
+   {
+    "id": 61,
+    "name": "Strawberry Dream Cake",
+    "price": 299,
+    "type": "veg",
+    "category": "Starters",
+    "ingredients": ["Strawberries", "Whipped cream", "Vanilla sponge", "Icing sugar"],
+    "modelUrl": "https://raw.githubusercontent.com/adarshpandey515/3dmodels/main/Thali_Delight_0630191125_texture.glb",
+    "description": "Delicate sponge cake layered with whipped cream and fresh strawberries."
+  },
+    {
+    "id": 62,
+    "name": "Strawberry Dream Cake",
+    "price": 299,
+    "type": "veg",
+    "category": "Starters",
+    "ingredients": ["Strawberries", "Whipped cream", "Vanilla sponge", "Icing sugar"],
+    "modelUrl": "https://raw.githubusercontent.com/adarshpandey515/3dmodels/main/tripo_pbr_model_d466ddac-8883-458e-b10f-a74ca015ff9d.glb",
+    "description": "Delicate sponge cake layered with whipped cream and fresh strawberries."
+  },
     {
     "id": 5,
     "name": "Strawberry Dream Cake",
