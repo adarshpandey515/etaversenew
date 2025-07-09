@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import HomeSection from "@/components/home-section"
 import RestaurantMenu from "@/components/restaurant-menu"
 import ContactSection from "@/components/contact-section"
@@ -15,6 +15,54 @@ export default function HomePage() {
   const [cartItems, setCartItems] = useState<any[]>([])
   const [showCart, setShowCart] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [activeSection, setActiveSection] = useState("home")
+  const [isMobile, setIsMobile] = useState(false)
+
+  const sectionRefs = {
+    home: useRef<HTMLElement | null>(null),
+    menu: useRef<HTMLElement | null>(null),
+    contact: useRef<HTMLElement | null>(null),
+  }
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768)
+    }
+    handleResize()
+    window.addEventListener("resize", handleResize)
+    return () => window.removeEventListener("resize", handleResize)
+  }, [])
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveSection(entry.target.id)
+          }
+        })
+      },
+      { threshold: 0.5 }
+    )
+
+    Object.values(sectionRefs).forEach((ref) => {
+      if (ref.current) observer.observe(ref.current)
+    })
+
+    return () => {
+      Object.values(sectionRefs).forEach((ref) => {
+        if (ref.current) observer.unobserve(ref.current)
+      })
+    }
+  }, [])
+
+  const scrollToSection = (id: string) => {
+    const el = document.getElementById(id)
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" })
+      setMobileMenuOpen(false)
+    }
+  }
 
   const addToCart = (item: any) => {
     setCartItems((prev) => {
@@ -23,16 +71,10 @@ export default function HomePage() {
         const updated = prev.map((cartItem) =>
           cartItem.id === item.id ? { ...cartItem, quantity: cartItem.quantity + 1 } : cartItem,
         )
-        toast({
-          title: "Item Updated",
-          description: `${item.name} quantity increased in cart`,
-        })
+        toast({ title: "Item Updated", description: `${item.name} quantity increased in cart` })
         return updated
       }
-      toast({
-        title: "Added to Cart",
-        description: `${item.name} has been added to your cart`,
-      })
+      toast({ title: "Added to Cart", description: `${item.name} has been added to your cart` })
       return [...prev, { ...item, quantity: 1 }]
     })
   }
@@ -46,7 +88,9 @@ export default function HomePage() {
       removeFromCart(itemId)
       return
     }
-    setCartItems((prev) => prev.map((item) => (item.id === itemId ? { ...item, quantity } : item)))
+    setCartItems((prev) =>
+      prev.map((item) => (item.id === itemId ? { ...item, quantity } : item))
+    )
   }
 
   const getTotalItems = () => {
@@ -57,11 +101,15 @@ export default function HomePage() {
     return cartItems.reduce((total, item) => total + item.price * item.quantity, 0)
   }
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-white via-[#fff9c4] to-[#ffe0b2]">
-      {/* Animated Fixed Background */}
-   
+  const isSectionActive = (section: string) => {
+    if (section === "home") {
+      return isMobile ? activeSection === "home" : true
+    }
+    return activeSection === section
+  }
 
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-white via-[#fff9c4] to-[#ffe0b2] scroll-smooth">
       {/* Header */}
       <header className="backdrop-blur-md shadow-lg border-b sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -74,44 +122,31 @@ export default function HomePage() {
 
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-4">
-              <Button
-                variant="outline"
-                onClick={() => setShowUpload(true)}
-                className="flex items-center space-x-2  hover:bg-[#fef4ea]"
-              >
-                <Upload className="w-4 h-4" />
-              </Button>
+              {["home", "menu", "contact"].map((section) => (
+                <button
+                  key={section}
+                  onClick={() => scrollToSection(section)}
+                  className={`capitalize px-4 py-2 border-b-2 transition-all duration-200 ${
+                    isSectionActive(section)
+                      ? "border-[#fccd3f] text-[#d49900]"
+                      : "border-transparent"
+                  } hover:border-[#fccd3f] hover:bg-[#fff4d0]/40 rounded-md`}
+                >
+                  {section}
+                </button>
+              ))}
 
               <Button
                 variant="outline"
-                className="relative  hover:bg-[#fef4ea]"
-                onClick={() => setShowCart(true)}
+                onClick={() => setShowUpload(true)}
+                className="flex items-center space-x-2 hover:bg-[#fef4ea]"
               >
-                <ShoppingCart className="w-4 h-4 mr-2" />
-                <span className="hidden sm:inline">Cart</span>
-                {getTotalItems() > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-[#fccd3f] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center animate-pulse">
-                    {getTotalItems()}
-                  </span>
-                )}
+                <Upload className="w-4 h-4" />
               </Button>
             </div>
 
             {/* Mobile Menu Button */}
             <div className="md:hidden flex items-center space-x-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setShowCart(true)}
-                className="relative border-[#fccd3f] hover:bg-[#fef4ea]"
-              >
-                <ShoppingCart className="w-4 h-4" />
-                {getTotalItems() > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-[#fccd3f] text-white text-xs rounded-full w-4 h-4 flex items-center justify-center text-[10px]">
-                    {getTotalItems()}
-                  </span>
-                )}
-              </Button>
               <Button variant="ghost" size="sm" onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="p-2">
                 {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
               </Button>
@@ -120,33 +155,63 @@ export default function HomePage() {
 
           {/* Mobile Menu */}
           {mobileMenuOpen && (
-            <div className="md:hidden pb-4 mt-2 pt-4">
+            <div className="md:hidden pb-4 mt-2 pt-4 space-y-2">
+              {["home", "menu", "contact"].map((section) => (
+                <Button
+                  key={section}
+                  variant="ghost"
+                  onClick={() => scrollToSection(section)}
+                  className={`w-full capitalize justify-start ${
+                    isSectionActive(section) ? "text-[#d49900] font-medium" : ""
+                  }`}
+                >
+                  {section}
+                </Button>
+              ))}
               <Button
                 variant="outline"
                 onClick={() => {
                   setShowUpload(true)
                   setMobileMenuOpen(false)
                 }}
-                className="w-full flex items-center justify-center space-x-2 border-[#fccd3f] hover:bg-[#fef4ea]"
+                className="w-full flex items-center justify-start space-x-2 border-[#fccd3f] hover:bg-[#fef4ea]"
               >
                 <Upload className="w-4 h-4" />
+                <span>Upload</span>
               </Button>
             </div>
           )}
         </div>
       </header>
 
-      {/* Main Content */}
+      {/* Sections */}
       <main className="relative z-10">
-        {/* Home Section */}
-        <HomeSection />
-
-        {/* Menu Section */}
-        <RestaurantMenu onAddToCart={addToCart} />
-
-        {/* Contact Section */}
-        <ContactSection />
+        <section id="home" ref={sectionRefs.home}>
+          <HomeSection />
+        </section>
+        <section id="menu" ref={sectionRefs.menu}>
+          <RestaurantMenu onAddToCart={addToCart} />
+        </section>
+        <section id="contact" ref={sectionRefs.contact}>
+          <ContactSection />
+        </section>
       </main>
+
+      {/* Floating Cart Button with Spacing */}
+      <div className="fixed bottom-6 right-6 z-50">
+        <Button
+          variant="default"
+          className="relative bg-[#fccd3f] text-white hover:bg-[#fcd65e]"
+          onClick={() => setShowCart(true)}
+        >
+          <ShoppingCart className="w-5 h-5" />
+          {getTotalItems() > 0 && (
+            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+              {getTotalItems()}
+            </span>
+          )}
+        </Button>
+      </div>
 
       {/* Upload Modal */}
       {showUpload && (
