@@ -104,7 +104,7 @@ export default function RestaurantMenu({ onAddToCart }: RestaurantMenuProps) {
 
 
   return (
-    <section id="menu-section" className="relative py-2 sm:py-4 lg:py-4 bg-transparent">
+    <div  className="relative py-2 sm:py-4 lg:py-4 bg-transparent">
       {/* Animated BG */}
       <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-[#fbdc7c] to-[#ffffff] rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
@@ -281,7 +281,7 @@ export default function RestaurantMenu({ onAddToCart }: RestaurantMenuProps) {
         })}
 
         {/* Why Choose Our 3D Menu Section */}
-        <section className="py-8 sm:py-12 lg:py-20 bg-white/10 backdrop-blur-sm rounded-2xl sm:rounded-3xl shadow-xl mx-2 sm:mx-0">
+        <section  className="py-8 sm:py-12 lg:py-20 bg-white/10 backdrop-blur-sm rounded-2xl sm:rounded-3xl shadow-xl mx-2 sm:mx-0">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-8 sm:mb-12 lg:mb-16">
               <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-800 mb-3 sm:mb-4">
@@ -380,6 +380,6 @@ export default function RestaurantMenu({ onAddToCart }: RestaurantMenuProps) {
           scroll-behavior: smooth;
         }
       `}</style>
-    </section>
+    </div>
   )
 }

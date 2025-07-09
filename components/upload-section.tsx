@@ -170,7 +170,7 @@ export default function UploadSection() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6  py-8 space-y-8">
       <div className="text-center space-y-4">
         <h2 className="text-4xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
           Upload 3D Food Models
@@ -180,7 +180,7 @@ export default function UploadSection() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1  gap-8">
         {/* Upload Section */}
         <Card className="bg-white/80 backdrop-blur-sm border-orange-100">
           <CardHeader>

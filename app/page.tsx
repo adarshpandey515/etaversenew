@@ -4,19 +4,22 @@ import { useEffect, useRef, useState } from "react"
 import HomeSection from "@/components/home-section"
 import RestaurantMenu from "@/components/restaurant-menu"
 import ContactSection from "@/components/contact-section"
-import UploadSection from "@/components/upload-section"
 import CartModal from "@/components/cart-modal"
 import { Button } from "@/components/ui/button"
-import { ShoppingCart, Upload, Menu, X } from "lucide-react"
+import { ShoppingCart, Upload, Menu, X, ChefHat, Bell } from "lucide-react"
 import { toast } from "@/hooks/use-toast"
+import { useRouter } from "next/navigation"
+import { getOrders, type Order } from "@/lib/order-storage"
 
 export default function HomePage() {
-  const [showUpload, setShowUpload] = useState(false)
+  const router = useRouter()
   const [cartItems, setCartItems] = useState<any[]>([])
   const [showCart, setShowCart] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [activeSection, setActiveSection] = useState("home")
   const [isMobile, setIsMobile] = useState(false)
+  const [userOrders, setUserOrders] = useState<Order[]>([])
+  const [lastNotifiedStatus, setLastNotifiedStatus] = useState<{ [key: string]: string }>({})
 
   const sectionRefs = {
     home: useRef<HTMLElement | null>(null),
@@ -33,26 +36,91 @@ export default function HomePage() {
     return () => window.removeEventListener("resize", handleResize)
   }, [])
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveSection(entry.target.id)
-          }
-        })
-      },
-      { threshold: 0.5 }
-    )
+useEffect(() => {
+  const handleScroll = () => {
+    const scrollPosition = window.scrollY
+    const sectionElements = document.querySelectorAll("section[id]")
+    sectionElements.forEach((section) => {
+      const rect = section.getBoundingClientRect()
+      const offsetTop = rect.top + window.scrollY
+      const offsetBottom = offsetTop + section.clientHeight
 
-    Object.values(sectionRefs).forEach((ref) => {
-      if (ref.current) observer.observe(ref.current)
+      if (scrollPosition >= offsetTop - 100 && scrollPosition < offsetBottom - 100) {
+        // console.log("Currently in section:", section.id)
+        setActiveSection(section.id || "home")
+
+      }
     })
+  }
 
-    return () => {
-      Object.values(sectionRefs).forEach((ref) => {
-        if (ref.current) observer.unobserve(ref.current)
+  window.addEventListener("scroll", handleScroll)
+  return () => window.removeEventListener("scroll", handleScroll)
+}, [])
+
+  // Check for order status updates
+  useEffect(() => {
+    const checkOrderUpdates = () => {
+      const allOrders = getOrders()
+        console.log("Running checkOrderUpdates", allOrders)
+      const recentOrders = allOrders.filter((order) => {
+        const orderTime = new Date(order.timestamp).getTime()
+        const now = new Date().getTime()
+        const timeDiff = now - orderTime
+        // Check orders from last 2 hours
+        return timeDiff < 2 * 60 * 60 * 1000
       })
+
+      recentOrders.forEach((order) => {
+        const lastStatus = lastNotifiedStatus[order.id]
+
+        if (lastStatus !== order.status) {
+          // Show notification for status change
+          if (order.status === "preparing" && lastStatus !== "preparing") {
+            console.log("got pre")
+            toast({
+              title: "🍳 Order Being Prepared!",
+              description: `Order #${order.id.split("-")[1]} is now being prepared by our chef. Estimated time: 15-20 minutes.`,
+            })
+          } else if (order.status === "ready" && lastStatus !== "ready") {
+            console.log("got ready")
+            toast({
+              title: "🎉 Order Ready!",
+              description: `Order #${order.id.split("-")[1]} is ready for pickup! Please collect from the counter.`,
+            })
+
+            // Show browser notification if permission granted
+            if (Notification.permission === "granted") {
+              new Notification("Order Ready! 🎉", {
+                body: `Order #${order.id.split("-")[1]} is ready for pickup!`,
+                icon: "/logo.png",
+              })
+            }
+          }
+
+          // Update last notified status
+          setLastNotifiedStatus((prev) => ({
+            ...prev,
+            [order.id]: order.status,
+          }))
+        }
+      })
+
+      setUserOrders(recentOrders)
+    }
+
+    // Check immediately
+    checkOrderUpdates()
+
+    // Check every 10 seconds
+    const interval = setInterval(checkOrderUpdates, 10000)
+
+    return () => clearInterval(interval)
+  }, [lastNotifiedStatus])
+
+  // Request notification permission on component mount
+  useEffect(() => {
+    if ("Notification" in window && Notification.permission === "default") {
+      Notification.requestPermission()
     }
   }, [])
 
@@ -88,9 +156,7 @@ export default function HomePage() {
       removeFromCart(itemId)
       return
     }
-    setCartItems((prev) =>
-      prev.map((item) => (item.id === itemId ? { ...item, quantity } : item))
-    )
+    setCartItems((prev) => prev.map((item) => (item.id === itemId ? { ...item, quantity } : item)))
   }
 
   const getTotalItems = () => {
@@ -102,15 +168,28 @@ export default function HomePage() {
   }
 
   const isSectionActive = (section: string) => {
-    if (section === "home") {
-      return isMobile ? activeSection === "home" : true
-    }
     return activeSection === section
+  }
+
+  // Clear cart after successful order
+  const handleOrderSuccess = () => {
+    setCartItems([])
+    toast({
+      title: "Cart Cleared",
+      description: "Your cart has been cleared after successful order placement.",
+    })
+  }
+
+  // Get active orders count for notification badge
+  const getActiveOrdersCount = () => {
+    
+    return userOrders.filter((order) => order.status === "preparing" || order.status === "ready").length
   }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-white via-[#fff9c4] to-[#ffe0b2] scroll-smooth">
       {/* Header */}
+      
       <header className="backdrop-blur-md shadow-lg border-b sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
@@ -123,14 +202,11 @@ export default function HomePage() {
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-4">
               {["home", "menu", "contact"].map((section) => (
-                <button
+                 <button
                   key={section}
                   onClick={() => scrollToSection(section)}
-                  className={`capitalize px-4 py-2 border-b-2 transition-all duration-200 ${
-                    isSectionActive(section)
-                      ? "border-[#fccd3f] text-[#d49900]"
-                      : "border-transparent"
-                  } hover:border-[#fccd3f] hover:bg-[#fff4d0]/40 rounded-md`}
+className={`capitalize px-4 py-2 border-b-2 flex items-center transition-all duration-200 rounded-md text-black 
+  ${activeSection === section ? "border-[#fccd3f] bg-[#fff4d0]/40" : "border-transparent hover:border-[#fccd3f] hover:bg-[#fff4d0]/40"}`}
                 >
                   {section}
                 </button>
@@ -138,15 +214,43 @@ export default function HomePage() {
 
               <Button
                 variant="outline"
-                onClick={() => setShowUpload(true)}
+                onClick={() => router.push("/upload")}
                 className="flex items-center space-x-2 hover:bg-[#fef4ea]"
               >
                 <Upload className="w-4 h-4" />
+                <span>Upload</span>
               </Button>
+
+              <Button
+                variant="outline"
+                onClick={() => router.push("/orders")}
+                className="flex items-center space-x-2 hover:bg-[#fef4ea]"
+              >
+                <ChefHat className="w-4 h-4" />
+                <span>Orders</span>
+              </Button>
+
+              {/* Order Status Notification */}
+              {getActiveOrdersCount() > 0 && (
+                <div className="relative">
+                  <Bell className="w-6 h-6 text-orange-600" />
+                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
+                    {getActiveOrdersCount()}
+                  </span>
+                </div>
+              )}
             </div>
 
             {/* Mobile Menu Button */}
             <div className="md:hidden flex items-center space-x-2">
+              {getActiveOrdersCount() > 0 && (
+                <div className="relative mr-2">
+                  <Bell className="w-5 h-5 text-orange-600" />
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center font-bold text-[10px]">
+                    {getActiveOrdersCount()}
+                  </span>
+                </div>
+              )}
               <Button variant="ghost" size="sm" onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="p-2">
                 {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
               </Button>
@@ -155,29 +259,38 @@ export default function HomePage() {
 
           {/* Mobile Menu */}
           {mobileMenuOpen && (
-            <div className="md:hidden pb-4 mt-2 pt-4 space-y-2">
+            <div className="md:hidden pb-4 mt-2 pt-4 space-y-2 bg-white">
               {["home", "menu", "contact"].map((section) => (
-                <Button
+               <button
                   key={section}
-                  variant="ghost"
                   onClick={() => scrollToSection(section)}
-                  className={`w-full capitalize justify-start ${
-                    isSectionActive(section) ? "text-[#d49900] font-medium" : ""
-                  }`}
+className={`capitalize px-4 py-2 border-b-2 flex items-center transition-all duration-200 rounded-md text-black 
+  ${activeSection === section ? "border-[#fccd3f] bg-transparent" : "bg-transparent  hover:border-[#fccd3f] hover:bg-[#fff4d0]/40"}`}
                 >
                   {section}
-                </Button>
+                </button>
               ))}
               <Button
                 variant="outline"
                 onClick={() => {
-                  setShowUpload(true)
+                  router.push("/upload")
                   setMobileMenuOpen(false)
                 }}
                 className="w-full flex items-center justify-start space-x-2 border-[#fccd3f] hover:bg-[#fef4ea]"
               >
                 <Upload className="w-4 h-4" />
                 <span>Upload</span>
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  router.push("/orders")
+                  setMobileMenuOpen(false)
+                }}
+                className="w-full flex items-center justify-start space-x-2 border-[#fccd3f] hover:bg-[#fef4ea]"
+              >
+                <ChefHat className="w-4 h-4" />
+                <span>Orders</span>
               </Button>
             </div>
           )}
@@ -201,36 +314,17 @@ export default function HomePage() {
       <div className="fixed bottom-6 right-6 z-50">
         <Button
           variant="default"
-          className="relative bg-[#fccd3f] text-white hover:bg-[#fcd65e]"
+          className="relative w-14 h-14 rounded-full bg-[#fccd3f] text-black hover:bg-[#fcd65e] shadow-lg"
           onClick={() => setShowCart(true)}
         >
-          <ShoppingCart className="w-5 h-5" />
+          <ShoppingCart className="w-6 h-6 text-black" />
           {getTotalItems() > 0 && (
-            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-6 h-6 flex items-center justify-center font-bold">
               {getTotalItems()}
             </span>
           )}
         </Button>
       </div>
-
-      {/* Upload Modal */}
-      {showUpload && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-2 sm:p-4">
-          <div className="bg-white rounded-2xl max-w-6xl w-full max-h-[95vh] overflow-y-auto">
-            <div className="p-4 sm:p-6 border-b border-gray-200 flex justify-between items-center">
-              <h2 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-[#fccd3f] to-[#fef4ea] bg-clip-text text-transparent">
-                Upload 3D Models
-              </h2>
-              <Button variant="ghost" onClick={() => setShowUpload(false)} className="p-2">
-                <X className="w-5 h-5" />
-              </Button>
-            </div>
-            <div className="p-4 sm:p-6">
-              <UploadSection />
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Cart Modal */}
       <CartModal
@@ -240,6 +334,7 @@ export default function HomePage() {
         onUpdateQuantity={updateQuantity}
         onRemoveItem={removeFromCart}
         totalPrice={getTotalPrice()}
+        onOrderSuccess={handleOrderSuccess}
       />
     </div>
   )

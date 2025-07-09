@@ -1,104 +1,88 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-
+import { Button } from "./ui/button"
 interface ModelPreviewProps {
   modelUrl: string
 }
 
 export default function ModelPreview({ modelUrl }: ModelPreviewProps) {
+ const modelViewerRef = useRef<any>(null)
   const [isLoaded, setIsLoaded] = useState(false)
-  const [hasError, setHasError] = useState(false)
-  const [isScriptLoaded, setIsScriptLoaded] = useState(false)
-  const modelViewerRef = useRef<any>(null)
+  const [shouldLoad, setShouldLoad] = useState(false)
 
   useEffect(() => {
-    if (window.customElements && window.customElements.get("model-viewer")) {
-      setIsScriptLoaded(true)
-      return
-    }
     if (!document.querySelector('script[src*="model-viewer"]')) {
       const script = document.createElement("script")
       script.type = "module"
-      script.src = "https://unpkg.com/@google/model-viewer@3.4.0/dist/model-viewer.min.js"
-      script.onload = () => setIsScriptLoaded(true)
-      script.onerror = () => setHasError(true)
+      script.src = "https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"
       document.head.appendChild(script)
-    } else {
-      setIsScriptLoaded(true)
     }
   }, [])
 
   useEffect(() => {
-    const node = modelViewerRef.current
-    if (!node) return
-
-    function handleLoad() {
-      setIsLoaded(true)
-      setHasError(false)
-    }
-    function handleError(event: any) {
-      setHasError(true)
-      setIsLoaded(false)
-    }
-    node.addEventListener("load", handleLoad)
-    node.addEventListener("error", handleError)
-    return () => {
-      node.removeEventListener("load", handleLoad)
-      node.removeEventListener("error", handleError)
-    }
-  }, [isScriptLoaded, modelUrl])
-
-  if (hasError) {
-    return (
-      <div className="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center rounded-xl">
-        <div className="text-center">
-          <div className="w-16 h-16 bg-gray-300 rounded-full mx-auto mb-4 flex items-center justify-center">
-            <span className="text-gray-500 text-2xl">🍽️</span>
-          </div>
-          <p className="text-gray-500">Model Preview Unavailable</p>
-        </div>
-      </div>
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !shouldLoad) {
+            setShouldLoad(true)
+          }
+        })
+      },
+      { threshold: 0.1 },
     )
-  }
 
-  if (!isScriptLoaded) {
-    return (
-      <div className="w-full h-full bg-gradient-to-br from-[#fef4ea] to-[#fccd3f] flex items-center justify-center rounded-xl">
-        <div className="text-center">
-          <div className="w-12 h-12 bg-[#fccd3f] rounded-full animate-pulse mx-auto mb-2"></div>
-          <p className="text-[#fccd3f] text-sm">Loading 3D Viewer...</p>
-        </div>
-      </div>
-    )
-  }
+    if (modelViewerRef.current) {
+      observer.observe(modelViewerRef.current)
+    }
+
+    return () => observer.disconnect()
+  }, [shouldLoad])
+
+  const handleViewInAR = () => {
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+      navigator.userAgent
+    );
+    if (!isMobile) {
+      alert('3D view is only supported on mobile devices.');
+      return;
+    }
+ 
+  };
 
   return (
-    <div className="w-full h-full relative">
-      {!isLoaded && (
-        <div className="absolute inset-0 bg-gradient-to-br from-[#fef4ea] to-[#fccd3f] flex items-center justify-center rounded-xl z-10 pointer-events-none">
+    <div ref={modelViewerRef} className="w-full h-full relative z-100">
+      {shouldLoad ? (
+        <>
+          <model-viewer
+         
+            src={modelUrl}
+            alt="3D Food Model"
+            ar
+            ar-modes="scene-viewer quick-look"
+            auto-rotate
+            camera-controls
+            shadow-intensity="1"
+            style={{ width: "100%", height: "100%" }}
+            onLoad={() => setIsLoaded(true)}
+            className="rounded-t-2xl"
+          />
+          <Button
+            onClick={handleViewInAR}
+            size="sm"
+            className="absolute bottom-2 bg-transparent  left-2 hover:bg-[#fbb63d] text-gray-600 border border-gray-500  text-xs px-3 py-1 rounded-lg shadow-lg"
+          >
+            View In 3D
+          </Button>
+        </>
+      ) : (
+        <div className="w-full h-full bg-gradient-to-br from-[#fef4ea] to-[#fccd3f] flex items-center justify-center rounded-t-2xl">
           <div className="text-center">
-            <div className="w-12 h-12 rounded-full animate-pulse mx-auto mb-2"></div>
-            <p className="text-[#fccd3f] text-sm">Loading Preview...</p>
+            <div className="w-12 h-12 bg-[#fccd3f] rounded-full animate-pulse mx-auto mb-2"></div>
+            <p className="text-[#fccd3f] text-sm">Loading 3D Model...</p>
           </div>
         </div>
       )}
-
-      <model-viewer
-        ref={modelViewerRef}
-        src={modelUrl}
-        alt="3D Model Preview"
-        ar
-        ar-modes="webxr scene-viewer quick-look"
-        auto-rotate
-        camera-controls
-        shadow-intensity="1"
-        loading="lazy"
-        reveal="interaction"
-        interaction-prompt="none"
-        style={{ width: "100%", height: "100%" }}
-        className="rounded-xl"
-      />
     </div>
   )
 }

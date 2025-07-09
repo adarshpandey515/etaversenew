@@ -3,9 +3,10 @@
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Badge } from "@/components/ui/badge"
-import { Minus, Plus, Trash2, ShoppingBag } from "lucide-react"
+import { Minus, Plus, Trash2, ShoppingBag, CheckCircle } from "lucide-react"
 import { toast } from "@/hooks/use-toast"
-import React, { useState } from "react"
+import { useState } from "react"
+import { addOrder } from "@/lib/order-storage"
 
 interface CartItem {
   id: number
@@ -14,6 +15,8 @@ interface CartItem {
   quantity: number
   type: string
   category: string
+  modelUrl: string
+  description: string
 }
 
 interface CartModalProps {
@@ -23,6 +26,7 @@ interface CartModalProps {
   onUpdateQuantity: (id: number, quantity: number) => void
   onRemoveItem: (id: number) => void
   totalPrice: number
+  onOrderSuccess: () => void // New prop to clear cart
 }
 
 export default function CartModal({
@@ -32,31 +36,68 @@ export default function CartModal({
   onUpdateQuantity,
   onRemoveItem,
   totalPrice,
+  onOrderSuccess,
 }: CartModalProps) {
   const [tableNo, setTableNo] = useState<string>("")
   const [error, setError] = useState<string>("")
+  const [orderPlaced, setOrderPlaced] = useState(false)
+  const [orderId, setOrderId] = useState<string>("")
 
   const handlePlaceOrder = () => {
     if (tableNo.trim() === "") {
-      setError("Please provide a table number or write 'NA' if you don't know.");
-      return;
+      setError("Please provide a table number or write 'NA' if you don't know.")
+      return
     } else {
-      setError(""); // Clear any previous error
+      setError("")
     }
 
-    toast({
-      title: "Order Placed!",
-      description: `Your order of ₹${totalPrice + Math.round(totalPrice * 0.1)} has been placed successfully. We'll prepare it shortly!`,
-    });
-
     // Calculate total amount (including taxes)
-    const totalAmount = totalPrice + Math.round(totalPrice * 0.1);
+    const totalAmount = totalPrice + Math.round(totalPrice * 0.1)
 
-    // Create the UPI payment URL dynamically
-    const upiUrl = `upi://pay?pa=pandeyadarsh515@okaxis&pn=AdarshPandey&cu=INR&am=${totalAmount}`;
+    // Create order
+    const newOrderId = addOrder({
+      tableNo: tableNo.trim(),
+      items: cartItems,
+      totalPrice,
+      totalAmount,
+      status: "pending",
+    })
 
-    // Redirect to the UPI payment URL
-    window.location.href = upiUrl;
+    if (newOrderId) {
+      setOrderId(newOrderId)
+      setOrderPlaced(true)
+
+      // Show success toast
+      toast({
+        title: "Order Placed Successfully!",
+        description: `Order #${newOrderId.split("-")[1]} has been sent to the kitchen. Total: ₹${totalAmount}`,
+      })
+
+      // Clear the cart immediately after successful order
+      onOrderSuccess()
+
+      // Create the UPI payment URL dynamically
+      const upiUrl = `upi://pay?pa=pandeyadarsh515@okaxis&pn=AdarshPandey&cu=INR&am=${totalAmount}`
+
+      // Redirect to the UPI payment URL after a short delay
+      setTimeout(() => {
+        window.location.href = upiUrl
+      }, 2000)
+    } else {
+      toast({
+        title: "Order Failed",
+        description: "Failed to place order. Please try again.",
+        variant: "destructive",
+      })
+    }
+  }
+
+  const handleCloseModal = () => {
+    setOrderPlaced(false)
+    setOrderId("")
+    setTableNo("")
+    setError("")
+    onClose()
   }
 
   const getTypeColor = (type: string) => {
@@ -70,6 +111,40 @@ export default function CartModal({
       default:
         return "bg-gray-100 text-gray-800 border-gray-200"
     }
+  }
+
+  if (orderPlaced) {
+    return (
+      <Dialog open={isOpen} onOpenChange={handleCloseModal}>
+        <DialogContent className="max-w-md sm:max-w-lg mx-4">
+          <div className="text-center py-8">
+            <CheckCircle className="w-20 h-20 text-green-500 mx-auto mb-6" />
+            <h2 className="text-2xl font-bold text-green-600 mb-4">Order Placed Successfully!</h2>
+
+            <div className="bg-green-50 rounded-lg p-4 mb-6">
+              <p className="text-lg font-semibold text-gray-800 mb-2">Order #{orderId.split("-")[1]}</p>
+              <p className="text-gray-600 mb-2">Table: {tableNo}</p>
+              <p className="text-gray-600 mb-2">{cartItems.length} items</p>
+              <p className="text-xl font-bold text-green-600">Total: ₹{totalPrice + Math.round(totalPrice * 0.1)}</p>
+            </div>
+
+            <div className="space-y-3 text-sm text-gray-600">
+              <p>✅ Your order has been sent to the kitchen</p>
+              <p>🍳 Chef will start preparing your food</p>
+              <p>📱 You'll receive notifications about order status</p>
+              <p>💳 Redirecting to payment...</p>
+            </div>
+
+            <Button
+              onClick={handleCloseModal}
+              className="mt-6 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600"
+            >
+              Close
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+    )
   }
 
   return (
@@ -180,7 +255,7 @@ export default function CartModal({
                     onClick={handlePlaceOrder}
                     className="w-full bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white py-2 sm:py-3 text-sm sm:text-lg font-semibold"
                   >
-                    Proceed for Payment
+                    Place Order & Pay
                   </Button>
                 </div>
               </div>
@@ -191,4 +266,3 @@ export default function CartModal({
     </Dialog>
   )
 }
-// Note: Ensure you have the necessary styles and components imported for this code to work correctly.
