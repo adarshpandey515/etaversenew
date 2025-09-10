@@ -1,0 +1,18 @@
+{
+  "employees": {
+    "fields": ["name", "phone", "geofence_id", "created_at", "status"],
+    "subcollections": {
+      "attendance": {
+        "fields": ["check_in", "check_out", "total_hours", "status", "geofence_id"],
+        "subcollections": {
+          "logs": {
+            "fields": ["event", "time", "geopoint"]
+          }
+        }
+      }
+    }
+  },
+  "geofences": {
+    "fields": ["employee_name", "geopoint", "radius", "created_at"]
+  }
+}
