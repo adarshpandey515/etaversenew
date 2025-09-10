@@ -15,7 +15,7 @@ export async function POST(req: Request) {
     allData[col.id] = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
   }
 
-  console.log("Full DB Data:", allData);
+  // console.log("Full DB Data:", allData);
 
   // -----------------------------
   // 2️⃣ Prepare prompt for Gemini
@@ -49,7 +49,7 @@ Please answer the question using the database above.
   const data = await geminiResp.json();
   const answer = data.candidates?.[0]?.content?.parts?.[0]?.text || "No answer";
 
-  console.log("Gemini Answer:", answer);
+  // console.log("Gemini Answer:", answer);
 
   return new Response(JSON.stringify({ answer }), {
     headers: { "Content-Type": "application/json" },
