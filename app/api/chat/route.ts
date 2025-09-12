@@ -1,11 +1,11 @@
-import { db } from "@/lib/firebaseAdmin";
+import { db, rtdb } from "@/lib/firebaseAdmin";
 
 export async function POST(req: Request) {
   const body = await req.json();
   const { query } = body;
 
   // -----------------------------
-  // 1️⃣ Get all data from Firestore
+  // 1️⃣ Get all Firestore data
   // -----------------------------
   const collections = await db.listCollections();
   const allData: Record<string, any> = {};
@@ -15,10 +15,19 @@ export async function POST(req: Request) {
     allData[col.id] = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
   }
 
-  // console.log("Full DB Data:", allData);
+  // -----------------------------
+  // 2️⃣ Get attendance data from Realtime Database
+  // Assuming attendance is stored under "/attendance"
+  // Adjust the path according to your RTDB structure
+  // -----------------------------
+  const attendanceSnapshot = await rtdb.ref('/attendance').once('value');
+  const attendanceData = attendanceSnapshot.val();
+  console.log(attendanceData);
+  // Add attendance data to allData under a key
+  allData['attendance'] = attendanceData;
 
   // -----------------------------
-  // 2️⃣ Prepare prompt for Gemini
+  // 3️⃣ Prepare prompt for Gemini
   // -----------------------------
   const systemPrompt = `
 You are an assistant with access to the following database:
@@ -30,7 +39,7 @@ Please answer the question using the database above.
 `;
 
   // -----------------------------
-  // 3️⃣ Call Gemini
+  // 4️⃣ Call Gemini API
   // -----------------------------
   const geminiResp = await fetch(
     "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent",
@@ -48,8 +57,6 @@ Please answer the question using the database above.
 
   const data = await geminiResp.json();
   const answer = data.candidates?.[0]?.content?.parts?.[0]?.text || "No answer";
-
-  // console.log("Gemini Answer:", answer);
 
   return new Response(JSON.stringify({ answer }), {
     headers: { "Content-Type": "application/json" },
