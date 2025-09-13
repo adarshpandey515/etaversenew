@@ -1,24 +1,22 @@
 import { db, rtdb } from "@/lib/firebaseAdmin";
 
-export async function POST(req: Request) {
-  // --- handle CORS preflight ---
-  if (req.method === "OPTIONS") {
-    return new Response(null, {
-      status: 200,
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, OPTIONS",
-        "Access-Control-Allow-Headers": "Content-Type",
-      },
-    });
-  }
+// --- handle CORS preflight ---
+export async function OPTIONS() {
+  return new Response(null, {
+    status: 200,
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type",
+    },
+  });
+}
 
+export async function POST(req: Request) {
   const body = await req.json();
   const { query } = body;
 
-  // -----------------------------
   // 1️⃣ Get all Firestore data
-  // -----------------------------
   const collections = await db.listCollections();
   const allData: Record<string, any> = {};
 
@@ -27,16 +25,12 @@ export async function POST(req: Request) {
     allData[col.id] = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
   }
 
-  // -----------------------------
   // 2️⃣ Get attendance data from RTDB
-  // -----------------------------
   const attendanceSnapshot = await rtdb.ref("/attendance").once("value");
   const attendanceData = attendanceSnapshot.val();
   allData["attendance"] = attendanceData;
 
-  // -----------------------------
-  // 3️⃣ Prepare prompt for Gemini
-  // -----------------------------
+  // 3️⃣ Prepare prompt
   const systemPrompt = `
 You are an assistant with access to the following database:
 ${JSON.stringify(allData, null, 2)}
@@ -46,9 +40,7 @@ User question: ${query}
 Please answer the question using the database above.
 `;
 
-  // -----------------------------
   // 4️⃣ Call Gemini API
-  // -----------------------------
   const geminiResp = await fetch(
     "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent",
     {
@@ -70,9 +62,7 @@ Please answer the question using the database above.
     status: 200,
     headers: {
       "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",         // 👈 added here
-      "Access-Control-Allow-Methods": "POST, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type",
+      "Access-Control-Allow-Origin": "*", // 👈 required
     },
   });
 }
