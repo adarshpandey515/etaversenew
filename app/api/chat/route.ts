@@ -1,6 +1,18 @@
 import { db, rtdb } from "@/lib/firebaseAdmin";
 
 export async function POST(req: Request) {
+  // --- handle CORS preflight ---
+  if (req.method === "OPTIONS") {
+    return new Response(null, {
+      status: 200,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type",
+      },
+    });
+  }
+
   const body = await req.json();
   const { query } = body;
 
@@ -16,15 +28,11 @@ export async function POST(req: Request) {
   }
 
   // -----------------------------
-  // 2️⃣ Get attendance data from Realtime Database
-  // Assuming attendance is stored under "/attendance"
-  // Adjust the path according to your RTDB structure
+  // 2️⃣ Get attendance data from RTDB
   // -----------------------------
-  const attendanceSnapshot = await rtdb.ref('/attendance').once('value');
+  const attendanceSnapshot = await rtdb.ref("/attendance").once("value");
   const attendanceData = attendanceSnapshot.val();
-  console.log(attendanceData);
-  // Add attendance data to allData under a key
-  allData['attendance'] = attendanceData;
+  allData["attendance"] = attendanceData;
 
   // -----------------------------
   // 3️⃣ Prepare prompt for Gemini
@@ -47,7 +55,7 @@ Please answer the question using the database above.
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "x-goog-api-key": process.env.GEMINI_KEY,
+        "x-goog-api-key": process.env.GEMINI_KEY!,
       },
       body: JSON.stringify({
         contents: [{ parts: [{ text: systemPrompt }] }],
@@ -59,6 +67,12 @@ Please answer the question using the database above.
   const answer = data.candidates?.[0]?.content?.parts?.[0]?.text || "No answer";
 
   return new Response(JSON.stringify({ answer }), {
-    headers: { "Content-Type": "application/json" },
+    status: 200,
+    headers: {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",         // 👈 added here
+      "Access-Control-Allow-Methods": "POST, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type",
+    },
   });
 }
